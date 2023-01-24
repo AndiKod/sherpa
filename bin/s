@@ -1,0 +1,508 @@
+#!/bin/bash
+
+#
+#
+#    sh:erpa - Your personal asistant from Bash
+#
+#      -- Repo: github.com/AndiKod/sherpa --
+#
+#
+
+#  Check OS. If not Windows WSL, it's assumed Linux (or MacOS)
+os() 
+{
+	local osType=''
+	[[ $(grep Microsoft /proc/version) != "" ]] && osType='WSL' || osType='Linux'
+	echo "$osType"
+}
+
+
+# --- Basic Config --- #
+
+defRoot="/home/andrei/code/astro-sherpa"
+defDirectory="/home/andrei/code/astro-sherpa/src/contents"
+defImages="/home/andrei/code/astro-sherpa/public/assets"
+defEditor="/usr/bin/vim"
+
+
+
+#                                        #
+# ------ LINUX (or MacOS) Section ------ #
+#                                        #
+if [[ $(os) == "Linux" ]]
+then
+
+	# --- Linux defaults ---
+	#defDirectory="/home/andrei/Documents/sherpa"
+	defBrowser="firefox"
+	defEditor="vim"
+	defExplorer="ranger"
+	defExplorerBis="nautilus"
+
+	# --- Programs qualified paths ---
+	# cmd: $ which nautilus  output: /usr/bin/nautilus
+	Vim="/usr/bin/vim"
+	Ranger="/usr/bin/ranger"
+	Nautilus="/usr/bin/nautilus"
+	Sublime="/snap/bin/subl"
+	Nano="/usr/bin/nano"
+	ed="/usr/bin/ed"
+	neoVim="/usr/bin/nvim"
+
+	# Alternative programs [+] Options
+	editPlus=("Nano" "Sublime" "neoVim" "ed")
+	dirPlus=("Nautilus" "Sublime")
+
+	# Get inside the main Directory, so we could identify $1
+	# as being a file or a directory, by implying the full path  
+	cd $defDirectory
+ 
+#                               # 
+# --- If $1 is a -directory --- #
+#                               #
+
+# If the only argument is a -directory, open in defExplorer
+[[ $# == 1 && -d $1 ]] && $defExplorer $1
+
+# [+] Menu to chose an alt program
+if [[ -d $1 && $2 == "+" ]] 
+then	
+	# Function. Open $2 dir in $1 programm, and hide StdErr
+	openIn() 
+	{
+		$1 $2 2> /dev/null
+	}
+	# Custom prompt & select/case menu loop, calling the function
+	PS3="CtrC to quit OR Pick a program number:"
+	select explorer in "${dirPlus[@]}"
+	do
+	case $explorer in
+		"Nautilus") 
+			openIn $Nautilus $1
+			exit
+		;;
+		"Sublime") 
+			openIn $Sublime $1 
+			exit
+		;;
+		*) echo "Invalid $REPLY option"; break
+	 esac
+	done
+fi
+
+#                          #  
+# --- If $1 is a -file --- #
+#                          #
+
+# If the only argument is a -file, open in defEditor
+[[ $# == 1 && -f $1 ]] && $defEditor $1
+
+# [+] Menu to chose an alt program for opening a -file
+if [[ -f $1 && $2 == "+" ]] 
+then	
+	# Function. Open $2 file in $1 programm, and hide StdErr
+	editIn() 
+	{
+		$1 $2 2> /dev/null
+	}
+	# Custom prompt & select/case menu loop, calling the function
+	PS3="CtrC to quit OR Pick a program number:"
+	select explorer in "${editPlus[@]}"
+	do
+	case $explorer in
+		"Nano") 
+			editIn $Nano $1
+			exit
+		;;
+		"Sublime") 
+			editIn $Sublime $1 
+			exit
+		;;
+		"neoVim") 
+			editIn $neoVim $1 
+			exit
+		;;
+		"ed") 
+			editIn $ed $1 
+			exit
+		;;
+		*) echo "Invalid $REPLY option"; break
+	 esac		
+	done
+fi
+
+
+#                                   #
+# ------ Windows WSL Section ------ #
+#                                   #
+elif [[ $(os) == "WSL" ]]
+then
+	
+	# --- Windows Defaults --- # 
+	defBrowser="/mnt/e/Programmes/FirefoxNightly/firefox.exe"
+	defEditor="/usr/bin/vim"
+	defExplorer="/usr/bin/ranger"
+
+	# --- Programs qualified paths ---
+	Vim="/usr/bin/vim"
+	Ranger="/usr/bin/ranger"
+	WinExplorer="/mnt/c/Windows/explorer.exe"
+	Sublime="/mnt/e/Programmes/Sublime3/subl.exe"
+	Nano="/bin/nano"
+	ed="/bin/ed"
+	neoVim="/usr/bin/nvim"
+
+	# Alternative programs [+] Options
+	editPlus=("Nano" "Sublime" "neoVim" "ed")
+	dirPlus=("WinExplorer" "Sublime")
+
+	# Get inside the main Directory, so we could identify $1
+	# as being a file or a directory, by implying the full path  
+	cd $defDirectory
+ 
+
+#                               # 
+# --- If $1 is a -directory --- #
+#                               #
+
+# If the only argument is a -directory, open in defExplorer
+[[ $# == 1 && -d $1 ]] && $defExplorer $1
+
+# [+] Menu to chose an alt program for opening a directory within
+if [[ -d $1 && $2 == "+" ]] 
+then	
+	# Function. Open $2 dir in $1 programm, and hide StdErr
+	openIn() {
+		$1 $2 2> /dev/null
+	}
+	# Custom prompt & select/case menu loop, calling the function   
+	PS3="CtrC to quit OR Pick a program number:"
+	select explorer in "${dirPlus[@]}"
+	do
+	case $explorer in
+		"WinExplorer") 
+			openIn $WinExplorer $1
+			exit
+		;;
+		"Sublime") 
+			openIn $Sublime $1 
+			exit
+		;;
+		*) echo "Invalid $REPLY option"; break
+	 esac		
+	done
+fi
+
+
+#                          # 
+# --- If $1 is a -file --- #
+#                          #
+	
+
+# If the only argument is a -file, open in defEditor  
+[[ $# == 1 && -f $1 ]] && $defEditor $1
+
+# [+] Menu to chose an alt program for opening a -file  
+if [[ -f $1 && $2 == "+" ]] 
+then	
+	# Function. Open $2 file in $1 programm, and hide StdErr
+	editIn() {
+		$1 $2 2> /dev/null
+	}
+	# Custom prompt & select/case menu loop, calling the function   
+	PS3="CtrC to quit OR Pick a program number:"
+	select explorer in "${editPlus[@]}"
+	do
+	case $explorer in
+		"Nano") 
+			editIn $Nano $1
+			exit
+		;;
+		"Sublime") 
+			editIn $Sublime $1 
+			exit
+		;;
+		"neoVim") 
+			editIn $neoVim $1 
+			exit
+		;;
+		"ed") 
+			editIn $ed $1 
+			exit
+		;;
+		*) echo "Invalid $REPLY option"; break
+	 esac
+	done
+fi
+
+else
+	echo "Dr Strange should come back from WSL or some Linux distro."
+	echo "https://github.com/AndiKod/sherpa"
+fi
+
+
+
+# ---------- /End of the "per system" section --------- #
+#                                                       # 
+# --- Only Platform agnostic things below that line --- #
+
+
+
+
+# Edit bin/s to change the Defaults
+[[ $1 == "config" ]] && vim ~/bin/s
+[[ $1 == "config-nano" ]] && nano ~/bin/s
+
+
+#   cd back into the root folder and get auto-completion
+# + for filenames in the 's commands'.
+cd $defDirectory
+
+# Move inside the root Directory
+[[ $1 == "root" ]] && (cd $defRoot; exec bash)
+# Move inside the default Directory a bit more 
+[[ $1 == "cd" ]] && (cd $defDirectory; exec bash)
+
+
+
+# Printing the content of the folders
+# Default ls listing of the main directory
+[[ $1 == "ls" ]] && ls $defDirectory
+# Show also the hidden .files
+[[ $1 == "la" ]] && ls -a $defDirectory
+# More detailed view, with permissions and human readable sizes
+[[ $1 == "ll" ]] && ls -l -h $defDirectory
+
+# Print the content of a file, like 'cat file.txt'
+[[ $1 == "c" && -f $2 ]] && awk '{print}' $2
+
+
+
+#                                 #
+# --- Files operations ---------- #
+#                                 #
+
+# TODO: Templates to create blank Astro, Vue, 11ty files.
+
+# Create an empty new file in the root  
+[[ $1 == "newFile" ]] && ( touch $defDirectory/$2 ; ls ) 
+
+# Create an empty Directory in the root
+[[ $1 == "newDir" ]] && ( mkdir $defDirectory/$2 ; ls )  
+
+# Rename file or folder
+[[ $1 == "rename" ]] && ( mv $2 $3 ; ls )
+
+# Appending text to a file without opening it  
+if [[ -f $1 && -n $2 && $2 != "+" ]]
+then
+	echo "Writing into $defDirectory/$1"
+	echo -e "\n$2" >> "$defDirectory/$1"
+	echo "Done"
+fi
+
+
+#                         #
+# --- If $1 is a Link --- #
+#                         #
+
+# Open a direct link  
+[[ $1 =~ ^http*.*$ || $1 =~ (.com|.net|.org|.io)$  ]] &&
+$defBrowser $1 2>/dev/null
+
+# DuckDuckGo Search
+[[ -n $1 && $1 == "ddg" ]] && 
+$defBrowser "https://duckduckgo.com/?q=$2" 2>/dev/null  	
+
+
+
+#                                   #
+# ----- Perform a simple grep ----- #
+#  gnu.org/software/grep/manual     #
+#
+#  s (loc||grep) pattern (file.ext||/path/to/file.ext) 
+#
+if [[ $1 == "loc" || $1 == "grep" ]]
+then
+	# Move inside the main folder for relative paths 
+	cd $defDirectory 
+	# Locate lines containing $2 in $3 ant write it to the register   
+	(grep "$2" $3 > "$defDirectory/tmp/find.txt" ;
+	# Read the register and output the content
+   echo $(cat "$defDirectory/tmp/find.txt"))
+fi  
+
+
+#                               #
+# --- Basic Git operations ---- #
+#                               #
+
+# --- Git PUSH to the git remote  --- #
+
+if [[ $1 == "toGit" ]]
+then
+	# Print a warning if Git not installed
+	[[ "$(git --version | awk '{print $2}')" != "version" ]] && echo "You need to install Git first. See `s --help`"
+
+	cd $defRoot
+
+	if [[ "$(git remote)" != "origin" ]]
+	then 
+		# If the defDirectory is not linked to the remote  
+		echo -e "\nThere is no git remote called origin \nin $(pwd)"
+		exit 1
+	else
+		# Get the $2 message or set a default.
+		if [[ -n $2 ]]; then
+			gitMessage="$2"
+		else
+			gitMessage="From sh:erpa"
+		fi	
+		# If Git and origin remote are both here, go Push.
+		echo "Saving to Git."
+		git add -A; git commit -m "$gitMessage"; git push &>/dev/null 
+		# Add an entry to a log 
+		echo "Done!"
+	fi  	
+fi  
+
+# --- Git PULL from the git remote --- #
+
+if [[ $1 == "fromGit" ]]
+then
+	# Print a warning if Git not installed
+	[[ "$(git --version | awk '{print $2}')" != "version" ]] && echo "You need to install Git first. See `s --help`"
+
+	cd $defRoot;
+
+	if [[ "$(git remote)" != "origin" ]]
+	then 
+		# If the defDirectory is not linked to the remote  
+		echo -e "\nIf you see the 'not a git repository' error, you need to link ($defDirectory)  to a Git remote. Check: https://github.com/AndiKod/sherpa"
+		exit 1
+	else
+		# If Git and origin remote are both here, go Pull.
+		echo "Updating from Git."
+		git pull &>/dev/null 
+		# Add an entry to a log 
+		echo "Done!"
+	fi  	
+fi  
+
+# --- Git Status --- #
+
+if [[ $1 == "gitStatus" ]]
+then
+	# Print a warning if Git not installed
+	[[ "$(git --version | awk '{print $2}')" != "version" ]] && echo "You need to install Git first. See `s --help`"
+
+	cd $defRoot 
+
+	if [[ "$(git remote)" != "origin" ]]
+	then 
+		# If the defDirectory is not linked to the remote  
+		echo -e "\nIf you see the 'not a git repository' error, you need to link ($defDirectory)  to a Git remote. Check: https://github.com/AndiKod/sherpa"
+		exit 1
+	else
+		git status  
+	fi  	
+fi  
+  
+  
+#                       #
+# --- Commands List --- #
+#                       #
+
+if [[ $1 == "?" ]]; then
+
+cat << 'EOF'
+--- Commands List ---
+
+- 'var' is a placeholder for a file, dir or url 
+
+            :With no arg, show Dashboard (date, greet, todos)
+root        :Go to the $defRoot folder. (git, node, etc)
+cd          :Go to the $defDirectory folder (content)
+ls          :Show the $defDirectory content
+la          :Same as ls but showing also .hidden files
+ll          :Same as ls but showing permissions & sizes 
+newDir "a"  :Creates "a" folder, in $defDirectory 
+newFile "a" :Creates "a" file in $defDirectory or dir inside 
+var         :Open the var file in $defEditor
+var         :Open the var directory in $defExplorer
+var         :Open the var url in $defBrowser
+var +       :Alternative Editor or Explorer options 
+var "txt"   :Writing txt into the var file
+ddg "txt"   :Search txt on DuckDuckGo & show in $defBrowser
+toGit "txt" :Save (Push) all files to git. txt as message
+fromGit     :Get the most recent version from git. (Pull)
+grep "a" b  :Show all lines from b file(s) having "a" string
+loc "a" b   :Alias for grep, doing the same. Locate "a" in "b"
+
+- Open the sh:erpa script itself, to set defaults:
+
+config      :It opens /home/user/sherpa/bin/s in Vim
+config-nano :Same but with nano   
+EOF
+
+fi  
+
+#                    #
+# ---- HELP Page --- #
+#                    #
+
+lang=("English" "Francais" ":quit")
+
+# If no arguments, print the Help page  
+[[ $1 == "--version" || $1 == "-v" ]] && 
+echo "AndiKod Sherpa v1.0 - Github"
+
+# If no arguments, print the Help page  
+if [[ $1 == "--help" ]]
+then 
+	echo "Sherpa Help Pages"
+	select help in "${lang[@]}"
+	do
+		case $help in
+			"English")
+				echo "See on GitHub at that time." 
+				echo "Type 's ?' for commands list." 
+				break
+				;;
+			"Francais")
+				clear  
+				echo "Voir sur GitHub pour le moment." 
+				break 
+				;;
+			":quit")
+				clear ;  exit
+				;;
+			*) echo "Invalid $REPLY option"; break
+		esac		
+	done
+fi 
+
+# Start Page
+if [[ $# == 0 ]]
+then 
+	greeting=("Hey" "Holà" "Bonjour" "Howdy" "Buna" "Ciao" "Hyva paiva" "Halo")
+	index=$(( RANDOM % ${#greeting[@]} ))
+
+	printf "Today $(date +%b%d) - $(date +%k:%M) \n"
+	printf '\U1F44B '"${greeting[${index}]} $(whoami) \n"  
+
+	echo
+	printf '\U1F4CB Todo \n'
+	grep -rn "\*\ \[\ \]" *
+
+
+
+fi	
+
+
+
+
+
+
+
+
