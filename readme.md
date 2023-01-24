@@ -27,7 +27,8 @@ Plug sh:erpa into a content directory. Here I use it inside an Astro project. It
 
 # --- Basic Config --- #
 
-sherpaDir="/home/andrei/sherpa"
+sherpaDir="/home/andrei/sherpa"  
+dotDir="/home/andrei/.config/sherpa"
 defRoot="/home/andrei/code/astro-sherpa"
 defDirectory="/home/andrei/code/astro-sherpa/src/contents"
 defImages="/home/andrei/code/astro-sherpa/public/assets"
@@ -174,7 +175,7 @@ You can stay up-to-date at home or "on the go" from your private git repository.
 
 ### Locate lines of text with g/re/p 
 
-- `s grep pattern file`: Will extract the lines conaining *pattern* from *file* or files (from the sherpa folder root) or any file with full path. The content is stored in a grep register and printed on screen from there.
+- `s grep pattern file`: Will extract the lines conaining *pattern* from *file* or files (from the sherpa folder root) or any file with full path. The content is stored in a grep register ($dotDir/registers/grep.txt) and printed on screen from there.
 
 - `s loc "something" todo.md`: do the same, it "locates" and print any line containing "something" in the todo.md file.
 

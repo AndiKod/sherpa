@@ -1,4 +1,5 @@
 #!/bin/bash
+#
 
 #
 #
@@ -8,6 +9,18 @@
 #
 #
 
+# --- Basic Config --- #
+
+sherpaDir="/home/andrei/sherpa"
+dotDir="/home/andrei/.config/sherpa"
+defRoot="/home/andrei/code/astro-sherpa"
+defDirectory="/home/andrei/code/astro-sherpa/src/contents"
+defImages="/home/andrei/code/astro-sherpa/public/assets"
+defEditor="/usr/bin/vim"
+
+
+# ----------------------------------------------------- #
+
 #  Check OS. If not Windows WSL, it's assumed Linux (or MacOS)
 os() 
 {
@@ -16,16 +29,6 @@ os()
 	echo "$osType"
 }
 
-
-# --- Basic Config --- #
-
-defRoot="/home/andrei/code/astro-sherpa"
-defDirectory="/home/andrei/code/astro-sherpa/src/contents"
-defImages="/home/andrei/code/astro-sherpa/public/assets"
-defEditor="/usr/bin/vim"
-
-
-
 #                                        #
 # ------ LINUX (or MacOS) Section ------ #
 #                                        #
@@ -33,7 +36,6 @@ if [[ $(os) == "Linux" ]]
 then
 
 	# --- Linux defaults ---
-	#defDirectory="/home/andrei/Documents/sherpa"
 	defBrowser="firefox"
 	defEditor="vim"
 	defExplorer="ranger"
@@ -250,8 +252,8 @@ fi
 
 
 # Edit bin/s to change the Defaults
-[[ $1 == "config" ]] && vim ~/bin/s
-[[ $1 == "config-nano" ]] && nano ~/bin/s
+[[ $1 == "config" ]] && vim ~/sherpa/bin/s
+[[ $1 == "config-nano" ]] && nano ~/sherpa/bin/s
 
 
 #   cd back into the root folder and get auto-completion
@@ -327,9 +329,9 @@ then
 	# Move inside the main folder for relative paths 
 	cd $defDirectory 
 	# Locate lines containing $2 in $3 ant write it to the register   
-	(grep "$2" $3 > "$defDirectory/tmp/find.txt" ;
+	(grep "$2" $3 > "$dotDir/registers/grep.txt" ;
 	# Read the register and output the content
-   echo $(cat "$defDirectory/tmp/find.txt"))
+   echo $(cat "$dotDir/registers/grep.txt"))
 fi  
 
 
