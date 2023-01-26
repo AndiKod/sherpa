@@ -6,9 +6,9 @@
 
 ### Personal Assistant from the shell
 
-A tool made to cover needs around managing/editing documents and daily activity, as I tried Notion and Obsidian but needed something more direct, flexible and straight forward ...so experimenting.
+A tool for notes taking and daily activity, as I tried Notion and Obsidian but needed something simple, flexible and straight forward from the terminal ...so experimenting.
 
-UNIX shell, via Bash, have everything you need to quickly create, manage and access information within documents. Sh:erpa is more or less a wrapper around existing CLI programs and tools ... with custom short commands. See them as building blocks for creating your own vibe. Just a starting point as for now.
+Sh:erpa is more or less a wrapper around existing CLI programs and tools ... with custom short commands, ux, and soon tools for people "new to the command line".
 
 It's a personnal project and still in early days, but feel free to give it a try. It's always good to have a sh:erpa helping you to reach your higher goals faster and safer.  
 
@@ -21,22 +21,26 @@ Clone the program itself: `cd ~` then `git clone git@github.com:AndiKod/sherpa.g
 
 Edit the `~/.bashrc` file and add that folder to the path `export PATH=$PATH:/home/username/sherpa/bin`. Restart your terminal.
 
-Plug sh:erpa into a content directory. Here I use it inside an Astro project. It can be an empty folder or whatever. sh:erpa will just use those defaults. 
-```bash
-# in /home/user/sherpa/bin/s  
+/!\  Config will gradually move into $dotDir/sherparc 
 
+As of now, edit routes in /home/user/sherpa/bin
+`s config` will open that file with Vim
+`s config-nano` the same but with Nano  
+
+Plug sh:erpa into a content directory. Here it's used with an Astro project. It can be virtually any folder, sh:erpa will just use those paths. 
+
+*user = your username*
+
+```bash
 # --- Basic Config --- #
 
-sherpaDir="/home/andrei/sherpa"  
-dotDir="/home/andrei/.config/sherpa"
-defRoot="/home/andrei/code/astro-sherpa"
-defDirectory="/home/andrei/code/astro-sherpa/src/contents"
-defImages="/home/andrei/code/astro-sherpa/public/assets"
+sherpaDir="/home/user/sherpa"    
+dotDir="/home/user/.config/sherpa" 
+defRoot="/home/user/code/astro" # from here we Git 
+defDirectory="/home/user/code/astro/src/contents" # content .md files
+defImages="/home/user/code/astro-sherpa/public/img" # Optional
 defEditor="/usr/bin/vim"
 ```
-
-You can now use short `s` commands and do things like: write text inside a file without even opening it, search something on DuckDuckGo and load it in your browser, push/pull to git from wherever you are, find lines with g/re/p, ...
-
 Your personal sh:erpa is ready to help you managing documents.
 
 
@@ -110,19 +114,34 @@ As bash can run from MacOS, as of now sh:erpa will identify the OS as Linux(dete
 
 Quick list of available commands so far:
 Type `s ?` to print them in the terminal 
+More documentation will go inside $sherpaDir
 
+### Todos
 
-Simply `s` with no arguments, will be a dashboard. For now just a greeting, the hour and if any, todos. Still thinking about what to display on it.
+In any file inside $defDirectory, (mainly .md ones), write a line following that pattern: `* [ ] My todo string`
 
+- Command `s file.md "My todo string"` will write that line in the specified file, without opening it. 
 
-`s config`: Open the bin/s file in Vim to change the default routes, and plug sh:herpa in any directory we want. 
-`s config-nano`: You guessed it, it's the same but with nano.
+- Command `s` will clean the screen and show all todos, in wich file and line they are.
+
+To complete it, and hide it from `s`, put a 'x' inside [ ] and make it [x]
+
+## Links (bookmarks)
+
+In any file inside $defDirectory, (mainly .md ones), write a line following that pattern: `link: [ kebab-cased-slug  ]( https://mylink.com ) tag1,tag2,tag3`
+
+- Command `s aL` or `s allLinks` will show all links in the format `slug: url` Ctr+click on the link will open it in browser
+
+- Command `s rL` or `s recentLinks` will do the same, but only showing the 5 most recent additions to the list.
+
+TODO: Add a filter links like `s aL tag2` 
+
 
 ### Directories
 
 - `s cd`: ChangeDirectory to $defDirectory. Useful to get auto-complete when typing files/dir names. 
 
-- `s ls`: List your sherpa folder content from wherever you are
+- `s ls`: List your sherpa folder content from wherever you are, without changing the current location
 
 - `s la`: Same but showing also .hidden files 
 
@@ -153,8 +172,10 @@ Simply `s` with no arguments, will be a dashboard. For now just a greeting, the 
 
 - `s rename file.ext newfile.ext`: Well, it renames the file
 
+TODO: Templates for `s newFile` creating blank html, md, whatever.
 
-### Web links Related
+
+### Launch links in the Browser & DDG Search  
 
 - `s https://domain.com/some/page`: Will open the page in the default browser (defaults to Firfox, but you can set yours). If the browser is opened, the page will load in a new tab.
 
@@ -181,12 +202,7 @@ You can stay up-to-date at home or "on the go" from your private git repository.
 
 You can write notes in some notes.md file, and every now and then use `s notes.md "todo:: Do this thing asap."` to add it in that file and keep adding other things. `s loc "todo::" notes.md` will show all the todos from that file at once, wherever in the text they are. We can tag lines with whatever else, like link:: and retrive them. Endless creative solutions.
 
-
-
-...to be updated, some commands are not yet documented here.
-
 ---
 
-Insert contact, thanks, links, other stuff here.
 
 -Andrei- 

@@ -13,10 +13,25 @@
 
 sherpaDir="/home/andrei/sherpa"
 dotDir="/home/andrei/.config/sherpa"
-defRoot="/home/andrei/code/astro-sherpa"
-defDirectory="/home/andrei/code/astro-sherpa/src/contents"
-defImages="/home/andrei/code/astro-sherpa/public/assets"
+defRoot="/home/andrei/Documents/notes"
+defDirectory="/home/andrei/Documents/notes"
+defImages="/home/andrei/Documents/notes/img"
 defEditor="/usr/bin/vim"
+
+# --- console.log output --- #
+log=""
+
+if [[ ! -d ~/.config/sherpa ]]
+then
+	log=" Creating ~/.config/sherpa Load again ;)"
+	cd ~/.config
+	mkdir sherpa 
+	cd sherpa 
+	mkdir registers 
+	touch sherparc registers/links.txt registers/grep.txt
+else
+	. ~/.config/sherpa/sherparc
+fi  
 
 
 # ----------------------------------------------------- #
@@ -264,6 +279,8 @@ cd $defDirectory
 [[ $1 == "root" ]] && (cd $defRoot; exec bash)
 # Move inside the default Directory a bit more 
 [[ $1 == "cd" ]] && (cd $defDirectory; exec bash)
+# Move inside the sh:erpa Director 
+[[ $1 == "sherpa" ]] && (cd $sherpaDir; exec bash)
 
 
 
@@ -316,6 +333,38 @@ $defBrowser $1 2>/dev/null
 [[ -n $1 && $1 == "ddg" ]] && 
 $defBrowser "https://duckduckgo.com/?q=$2" 2>/dev/null  	
 
+
+#                                    #
+# --- Links inside content files --- #
+#                                    #
+
+# Looging inside $defDirectory for lines
+#+following that pattern: 
+#    link: [ kebab-case-slug ]( url )
+# A coma separated tag list can follow 
+#+at the end of the line, to grep on. 
+
+
+# Print all Links 
+if [[ $1 == aL || $1 == allLinks ]]
+then
+	cd $defDirectory
+	# Write links list to $linksFile 
+  grep -r ^link: */*  | awk '{print "\n"$3": "$5}' > $dotDir/registers/links.txt  
+	# Print $linksFile 
+	cat $dotDir/registers/links.txt
+fi 
+
+
+# Print recent Links 
+if [[ $1 == rL || $1 == recentLinks ]]
+then
+	cd $defDirectory
+	# Write links list to $linksFile 
+  grep -r ^link: */*  | awk '{print "\n"$3": "$5}' > $dotDir/registers/links.txt  
+	# Print $linksFile 
+	tail $dotDir/registers/links.txt 
+fi 
 
 
 #                                   #
@@ -486,7 +535,14 @@ fi
 
 # Start Page
 if [[ $# == 0 ]]
-then 
+then
+	clear  
+	echo       
+	echo "+-+-+-+-+-+-+"
+	echo "|s|h|e|r|p|a|"
+	echo "+-+-+-+-+-+-+"
+	echo 
+
 	greeting=("Hey" "Holà" "Bonjour" "Howdy" "Buna" "Ciao" "Hyva paiva" "Halo")
 	index=$(( RANDOM % ${#greeting[@]} ))
 
@@ -496,8 +552,7 @@ then
 	echo
 	printf '\U1F4CB Todo \n'
 	grep -rn "\*\ \[\ \]" *
-
-
+	echo  
 
 fi	
 
