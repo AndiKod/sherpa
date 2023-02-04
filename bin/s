@@ -1,35 +1,51 @@
 #!/bin/bash
-#
 
-#
-#
 #    sh:erpa - Your personal asistant from Bash
 #
 #      -- Repo: github.com/AndiKod/sherpa --
-#
-#
+#          -- Author: Andrei Curelaru --
+
 
 # --- Basic Config --- #
 
 sherpaDir="/home/andrei/sherpa"
 dotDir="/home/andrei/.config/sherpa"
-defRoot="/home/andrei/Documents/notes"
-defDirectory="/home/andrei/Documents/notes"
-defImages="/home/andrei/Documents/notes/img"
 defEditor="/usr/bin/vim"
 
-# --- console.log output --- #
-log=""
+#                           #
+# --- Loading a Project --- #
+#                           #  
+# Must exist in $dotDir/project
+# It contains $defRoot $defDirectory $defContent
 
+project="vanillaNotes"
+
+#Sourcing it to load a different project=foo routes
+. $dotDir/projects/$project 
+
+# In the file, it's something like:
+#defRoot="/home/andrei/Documents/vanillaNotes"
+#defDirectory="/home/andrei/Documents/vanillaNotes"
+#defContent="/home/andrei/Documents/vanillaNotes/md"
+
+
+
+#                               #
+# --- sherparc & the dotDir --- #
+#                               #
+
+
+# Check if the $dotDir exists & create it if not  
 if [[ ! -d ~/.config/sherpa ]]
 then
 	log=" Creating ~/.config/sherpa Load again ;)"
 	cd ~/.config
 	mkdir sherpa 
 	cd sherpa 
-	mkdir registers 
-	touch sherparc registers/links.txt registers/grep.txt
+	mkdir data registers templates bin  
+	touch sherparc registers/links.txt registers/grep.txt data/todo data/bookmarks data/quicklinks
 else
+	# Source sherparc 
 	. ~/.config/sherpa/sherparc
 fi  
 
@@ -61,14 +77,13 @@ then
 	Vim="/usr/bin/vim"
 	Ranger="/usr/bin/ranger"
 	Nautilus="/usr/bin/nautilus"
-	Sublime="/snap/bin/subl"
 	Nano="/usr/bin/nano"
 	ed="/usr/bin/ed"
 	neoVim="/usr/bin/nvim"
 
 	# Alternative programs [+] Options
-	editPlus=("Nano" "Sublime" "neoVim" "ed")
-	dirPlus=("Nautilus" "Sublime")
+	editPlus=("Nano" "neoVim" "ed")
+	dirPlus=("Nautilus")
 
 	# Get inside the main Directory, so we could identify $1
 	# as being a file or a directory, by implying the full path  
@@ -96,10 +111,6 @@ then
 	case $explorer in
 		"Nautilus") 
 			openIn $Nautilus $1
-			exit
-		;;
-		"Sublime") 
-			openIn $Sublime $1 
 			exit
 		;;
 		*) echo "Invalid $REPLY option"; break
@@ -131,10 +142,6 @@ then
 			editIn $Nano $1
 			exit
 		;;
-		"Sublime") 
-			editIn $Sublime $1 
-			exit
-		;;
 		"neoVim") 
 			editIn $neoVim $1 
 			exit
@@ -154,9 +161,10 @@ fi
 #                                   #
 elif [[ $(os) == "WSL" ]]
 then
-	
+	#TODO Replace Firefox by Waterfox
+
 	# --- Windows Defaults --- # 
-	defBrowser="/mnt/e/Programmes/FirefoxNightly/firefox.exe"
+	defBrowser="/mnt/c/Program Files/Mozilla Firefox/firefox.exe"
 	defEditor="/usr/bin/vim"
 	defExplorer="/usr/bin/ranger"
 
@@ -164,14 +172,13 @@ then
 	Vim="/usr/bin/vim"
 	Ranger="/usr/bin/ranger"
 	WinExplorer="/mnt/c/Windows/explorer.exe"
-	Sublime="/mnt/e/Programmes/Sublime3/subl.exe"
 	Nano="/bin/nano"
 	ed="/bin/ed"
 	neoVim="/usr/bin/nvim"
 
 	# Alternative programs [+] Options
-	editPlus=("Nano" "Sublime" "neoVim" "ed")
-	dirPlus=("WinExplorer" "Sublime")
+	editPlus=("Nano" "neoVim" "ed")
+	dirPlus=("WinExplorer")
 
 	# Get inside the main Directory, so we could identify $1
 	# as being a file or a directory, by implying the full path  
@@ -201,10 +208,6 @@ then
 			openIn $WinExplorer $1
 			exit
 		;;
-		"Sublime") 
-			openIn $Sublime $1 
-			exit
-		;;
 		*) echo "Invalid $REPLY option"; break
 	 esac		
 	done
@@ -224,7 +227,7 @@ if [[ -f $1 && $2 == "+" ]]
 then	
 	# Function. Open $2 file in $1 programm, and hide StdErr
 	editIn() {
-		$1 $2 2> /dev/null
+	  "$1" $2 2> /dev/null
 	}
 	# Custom prompt & select/case menu loop, calling the function   
 	PS3="CtrC to quit OR Pick a program number:"
@@ -233,10 +236,6 @@ then
 	case $explorer in
 		"Nano") 
 			editIn $Nano $1
-			exit
-		;;
-		"Sublime") 
-			editIn $Sublime $1 
 			exit
 		;;
 		"neoVim") 
@@ -264,8 +263,6 @@ fi
 # --- Only Platform agnostic things below that line --- #
 
 
-
-
 # Edit bin/s to change the Defaults
 [[ $1 == "config" ]] && vim ~/sherpa/bin/s
 [[ $1 == "config-nano" ]] && nano ~/sherpa/bin/s
@@ -278,13 +275,28 @@ cd $defDirectory
 # Move inside the root Directory
 [[ $1 == "root" ]] && (cd $defRoot; exec bash)
 # Move inside the default Directory a bit more 
-[[ $1 == "cd" ]] && (cd $defDirectory; exec bash)
+[[ $1 == "src" ]] && (cd $defDirectory; exec bash)
 # Move inside the sh:erpa Director 
 [[ $1 == "sherpa" ]] && (cd $sherpaDir; exec bash)
+# Move inside the $dotDir 
+[[ $1 == "dotDir" ]] && (cd $dotDir; exec bash)
 
 
 
-# Printing the content of the folders
+#                      #  
+# --- Load Project --- #
+#                      #
+
+if [[ $1 == "load" ]]
+then	
+	echo "Actual project is $project"
+	echo "Switch to:"
+	read newProj
+	cd $sherpaDir
+	sed -i "s/project=\"${project}\"/project=\"${newProj}\"/" bin/s 
+fi  
+
+# This part is old, and may be re-written soon
 # Default ls listing of the main directory
 [[ $1 == "ls" ]] && ls $defDirectory
 # Show also the hidden .files
@@ -292,21 +304,215 @@ cd $defDirectory
 # More detailed view, with permissions and human readable sizes
 [[ $1 == "ll" ]] && ls -l -h $defDirectory
 
-# Print the content of a file, like 'cat file.txt'
-[[ $1 == "c" && -f $2 ]] && awk '{print}' $2
+# Print the content of a file
+[[ $1 == "c" && -f $2 ]] && less $2
 
+
+#               #
+# --- Todos --- #
+#               # 
+
+if [[ $1 == "todo" ]]
+then
+	todoTags=(`cat "$defRoot/data/todo-tags"`)
+	echo -e "\nOn wich list?"
+	for tag in "${todoTags[@]}"
+	do	
+		echo "- $tag"
+  done 
+	read list  
+	echo "So, what do you plan todo:"
+	read todo
+	echo "todo:;$list;$todo" >> $dotDir/data/todo 
+	s
+fi
+
+
+#                         #
+# --- List All Todos ---- #
+#                         #            
+
+# listTodos
+if [[ $1 == "lT" ]]
+then
+	echo -e "All Todos:\n"
+	grep -n ":" $dotDir/data/todo | awk -F ";" '{print "List: ",$2,"\n"$1,$3,"\n"}'
+fi  	
+
+
+
+#                         #
+# --- Complete a Todo --- #
+#                         #
+
+completeTodo()
+{
+	sed -i "${1}s/todo:/done:/" $dotDir/data/todo
+	echo "Good job, $(whoami), keep up."
+	sleep 2
+	s  
+}
+
+[[ $1 == "cT" ]]  && completeTodo $2
+
+
+#                         #
+# --- Activate a Todo --- #
+#                         #
+
+activateTodo()
+{
+	sed -i "${1}s/done:/todo:/" $dotDir/data/todo 
+	echo "Second chance to get it done. Lest's go."
+	sleep 2
+	s 
+}
+
+[[ $1 == "aT" ]] && activateTodo
+
+
+#                     #
+# --- Delete Todo --- #
+#                     #
+
+# TODO  
+
+
+#                   #
+# --- Bookmarks --- #
+#                   # 
+
+# new bookmark  
+if [[ $1 == "nbm" ]]
+then
+
+	#if [[ $defContent ]]; then
+	#	echo "Pick a topic from that list:"
+	#	cd $defContent; ls -p | grep -v /$ | grep -v ^[A-Z]
+	#fi	
+	#read file
+	echo -e "\nSlam that url in here:"
+	read url 
+	echo "Give it a nice-short-name:"
+	read slug 
+	echo "One or more tags like tag1,tag2,tag3:"
+	read tags 
+	#echo -e "\nlink: [ $slug ]( $url ) $tags" >> $file
+	echo "$slug;$url;$tags" >> $dotDir/data/bookmarks
+	echo "Awesome! It's in the box  ;)"
+fi 
+
+#                    #
+# --- Bookmarks ---- #
+#                    #
+
+if [[ $1 == "lbm" ]]
+then
+	echo -e "All Bookmarks:\n"
+	cat $dotDir/data/bookmarks | awk -F ";" '{print (NR-1 + 1)") ", $1," Tag: ",$3,"\n",$2,"\n"}'
+fi  	
+
+# TODO: Filter bm by tag   
 
 
 #                                 #
 # --- Files operations ---------- #
 #                                 #
 
-# TODO: Templates to create blank Astro, Vue, 11ty files.
+#
+# --- newFile from Template ---#
+#
 
-# Create an empty new file in the root  
-[[ $1 == "newFile" ]] && ( touch $defDirectory/$2 ; ls ) 
+if [[ $1 == "newFile" ]]
+then
+	#
+	# --- Listig templates from $dotDir/templates
+	#
+	if [[ $dotDir ]]; then
+		echo -e "\nWhat template should I use?"
+		cd $dotDir/templates; ls -p | grep -v /$ | grep -v ^[A-Z]
+	 	echo  
+	fi	
+	read template
+	#
+	# --- Listing folders in $defRoot
+	#
+	echo -e "\nOk. Where should I put the new file?"
+	cd $defRoot; ls -p | grep /$
+	read path
+	#
+	# --- Asking for a filename.ext
+	#
+	echo -e "\nGot it. A name.ext for it?"
+	read file  
+	cat $dotDir/templates/$template > $defRoot/$path$file
+	printf "\nThere you go! \U1F919 \n"
+	ls $defRoot/$path
+  #
+	# --- Open the new file, or not
+	#
+	echo -e "\nShould I open it already, y/n ?"
+	read open
+  # First attempt
+	if [[ $open == "y" || $open == "Y" ]]
+	then	
+		$defEditor $defRoot/$path$file
+	elif [[ $open == "n" || $open == "N" ]]
+	then
+		printf "Fair enough. Keep rockin' \U1F4AA \n"
+ 	else
+		# Last chance
+		printf "\U1F937 I'm not so smart. Sry. Tell me y/n \n" 
+		read secondShoot
 
-# Create an empty Directory in the root
+		if [[ $secondShoot == "y" || $secondShoot == "Y" ]]
+		then
+			$defEditor $defRoot/$path$file
+		elif [[ $secondShoot == "n" || $secondShoot == "N" ]]
+		then
+			echo "I'll keep it safe for later, then."
+		else	
+			printf "\U1F926 Nevermind"
+		fi  
+
+
+	fi # End [[ -d $dotDir ]] 
+fi   # End [[ $1 == nF ]]
+
+
+
+
+#                                 #
+# --- New file from template----- #
+#          The fast way!          #
+#   s nF templatefile newfile 
+
+if [[ $1 == "nF" ]]
+then
+
+	template=$dotDir/templates/$2 
+	file=$defRoot/$3 
+
+	if [[ -f $template ]]
+	then	
+		touch $file  
+		cat $template > $file 
+		
+			echo -e "\nDone! Do you want to open it? [y/n]"
+			read edit
+			if [[ $edit == "y" || $edit == "Y" ]]
+			then
+			 $defEditor $file
+	  fi
+	else
+		echo "The template $2 does not exists."
+		echo "s nF templateFile newFile (from \$root)"
+  fi  	
+	 
+fi
+
+
+# Create an empty Directory from the root
 [[ $1 == "newDir" ]] && ( mkdir $defDirectory/$2 ; ls )  
 
 # Rename file or folder
@@ -316,7 +522,7 @@ cd $defDirectory
 if [[ -f $1 && -n $2 && $2 != "+" ]]
 then
 	echo "Writing into $defDirectory/$1"
-	echo -e "\n$2" >> "$defDirectory/$1"
+	echo -e "$2" >> "$defDirectory/$1"
 	echo "Done"
 fi
 
@@ -327,45 +533,11 @@ fi
 
 # Open a direct link  
 [[ $1 =~ ^http*.*$ || $1 =~ (.com|.net|.org|.io)$  ]] &&
-$defBrowser $1 2>/dev/null
+"$defBrowser" $1 2>/dev/null
 
 # DuckDuckGo Search
 [[ -n $1 && $1 == "ddg" ]] && 
-$defBrowser "https://duckduckgo.com/?q=$2" 2>/dev/null  	
-
-
-#                                    #
-# --- Links inside content files --- #
-#                                    #
-
-# Looging inside $defDirectory for lines
-#+following that pattern: 
-#    link: [ kebab-case-slug ]( url )
-# A coma separated tag list can follow 
-#+at the end of the line, to grep on. 
-
-
-# Print all Links 
-if [[ $1 == aL || $1 == allLinks ]]
-then
-	cd $defDirectory
-	# Write links list to $linksFile 
-  grep -r ^link: */*  | awk '{print "\n"$3": "$5}' > $dotDir/registers/links.txt  
-	# Print $linksFile 
-	cat $dotDir/registers/links.txt
-fi 
-
-
-# Print recent Links 
-if [[ $1 == rL || $1 == recentLinks ]]
-then
-	cd $defDirectory
-	# Write links list to $linksFile 
-  grep -r ^link: */*  | awk '{print "\n"$3": "$5}' > $dotDir/registers/links.txt  
-	# Print $linksFile 
-	tail $dotDir/registers/links.txt 
-fi 
-
+"$defBrowser" "https://duckduckgo.com/?q=$2" 2>/dev/null  	
 
 #                                   #
 # ----- Perform a simple grep ----- #
@@ -382,7 +554,8 @@ then
 	# Read the register and output the content
    echo $(cat "$dotDir/registers/grep.txt"))
 fi  
-
+ 
+# Frankly, better learn and use it directly, it's easy à pipable
 
 #                               #
 # --- Basic Git operations ---- #
@@ -458,45 +631,45 @@ then
 		git status  
 	fi  	
 fi  
-  
+
   
 #                       #
 # --- Commands List --- #
 #                       #
+[[ $1 == "?" ]] && less $sherpaDir/docs/commands.md  
 
-if [[ $1 == "?" ]]; then
+#                    #
+# --- RSS Reader --- #
+#                    #
 
-cat << 'EOF'
---- Commands List ---
+# Install https://newsboat.org
 
-- 'var' is a placeholder for a file, dir or url 
+# Launch the Reader 
+if [[ $1 == "rss" ]]
+then
+	[[ $(newsboat -v | grep newsboat) != "" ]] && newsboat
+fi	
 
-            :With no arg, show Dashboard (date, greet, todos)
-root        :Go to the $defRoot folder. (git, node, etc)
-cd          :Go to the $defDirectory folder (content)
-ls          :Show the $defDirectory content
-la          :Same as ls but showing also .hidden files
-ll          :Same as ls but showing permissions & sizes 
-newDir "a"  :Creates "a" folder, in $defDirectory 
-newFile "a" :Creates "a" file in $defDirectory or dir inside 
-var         :Open the var file in $defEditor
-var         :Open the var directory in $defExplorer
-var         :Open the var url in $defBrowser
-var +       :Alternative Editor or Explorer options 
-var "txt"   :Writing txt into the var file
-ddg "txt"   :Search txt on DuckDuckGo & show in $defBrowser
-toGit "txt" :Save (Push) all files to git. txt as message
-fromGit     :Get the most recent version from git. (Pull)
-grep "a" b  :Show all lines from b file(s) having "a" string
-loc "a" b   :Alias for grep, doing the same. Locate "a" in "b"
+# Add a Feed 
+if [[ $1 == "af" ]]
+then
+	echo -e "\nOk, paste me that feed url below:"
+	read feed  
+	[[ -f ~/.newsboat/urls ]] && echo $feed >> ~/.newsboat/urls  
+	[[ ! -f ~/.newsboat/urls ]] && echo "The file is not here"   
+	echo "Got it! Happy reading, or fix it and comme back."
+	echo "Check the [ef] command to see if it's there."
+fi	
 
-- Open the sh:erpa script itself, to set defaults:
+# Edit Feeds file  
+if [[ $1 == "ef" ]]
+then
+	[[ -f ~/.newsboat/urls ]] && vim ~/.newsboat/urls  
+fi	
 
-config      :It opens /home/user/sherpa/bin/s in Vim
-config-nano :Same but with nano   
-EOF
 
-fi  
+
+
 
 #                    #
 # ---- HELP Page --- #
@@ -506,7 +679,7 @@ lang=("English" "Francais" ":quit")
 
 # If no arguments, print the Help page  
 [[ $1 == "--version" || $1 == "-v" ]] && 
-echo "AndiKod Sherpa v1.0 - Github"
+echo "AndiKod sh:erpa v1.0 - Github"
 
 # If no arguments, print the Help page  
 if [[ $1 == "--help" ]]
@@ -516,13 +689,14 @@ then
 	do
 		case $help in
 			"English")
-				echo "See on GitHub at that time." 
-				echo "Type 's ?' for commands list." 
+				echo "Docs will be in sherpa/docs & Github" 
+				echo "Type [s ?] for commands list." 
 				break
 				;;
 			"Francais")
 				clear  
-				echo "Voir sur GitHub pour le moment." 
+				echo "Il y aura de la doc dans sherpa/docs" 
+				echo "Utilise [s ?] pour une liste des commandes "
 				break 
 				;;
 			":quit")
@@ -550,16 +724,48 @@ then
 	printf '\U1F44B '"${greeting[${index}]} $(whoami) \n"  
 
 	echo
-	printf '\U1F4CB Todo \n'
-	grep -rn "\*\ \[\ \]" *
+	grep -n "todo:" $dotDir/data/todo | awk -F ";" '{print $1,$3,"\nlist:",$2,"\n"}'
+  echo 
+	#echo "-+-+-+-+-+-+-"
+	#echo To remove a todo from line 5 of file.md:
+	#echo sed -i '5d' file.md
+	echo
+
+	printf '\U1F4BC Git Status \n'
+
+	########################################
+	#
+	# Function. Check gitStatus for a string
+	# 
+	# Return: String 
+	#
+	#
+	gitStatus()
+	{
+		local changes="$(cd $defRoot; git status | grep "Changes not staged")"
+
+		local clean="$(cd $defRoot; git status | grep "nothing to commit")"
+
+    if [[ -n $changes ]] 
+		then	
+			echo "Changes not staged."
+			echo "Go: s toGit \"message\""
+		elif [[ -n $clean ]]
+		then
+			echo "Nothing to commit."
+			echo "Good job!"
+		fi  
+		
+	}
+	gitStatus 
+
+	echo
+	printf '\U2699 Project \n'
+	echo "Root: $defRoot"
+	echo "Src: $defDirectory"
+	echo "Content: $defContent"
 	echo  
 
-fi	
-
-
-
-
-
-
-
+fi 
+# /Dashboard s  	
 
