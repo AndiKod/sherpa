@@ -14,36 +14,38 @@ It's a personnal project and still in early days, but feel free to give it a try
 
 ## Install
 
+Clone the program in the home folder: 
 
-Clone the program itself: `cd ~` then `git clone git@github.com:AndiKod/sherpa.git`. It will create the /home/username/sherpa folder. 
+```bash
+cd ~
+git clone git@github.com:AndiKod/sherpa.git
+```
+Add that folder to the path by adding that line to **/home/username/.bashrc** : 
 
-Edit the `~/.bashrc` file and add that folder to the path `export PATH=$PATH:/home/username/sherpa/bin`. Restart your terminal and press `s`. Welcome.
+```bash
+export PATH=$PATH:/home/username/sherpa/bin
+```
+Restart your terminal and press `s`. Welcome.
 
 Edit defaults in ~/sherpa/bin/s  
 `s config` will open that file with Vim
 `s config-nano` the same but with Nano  
 
-Plug sh:erpa into a content directory. The recommended way is to clone [Calpin](https://github.com/AndiKod/calepin) ,write plain markdown and view it in your browser as html with zero config. 
+Plug sh:erpa into a content directory. The recommended way is to clone [Calepin](https://github.com/AndiKod/calepin), write plain markdown in md/ and view it in your browser as html with zero config. 
 
-It can be virtually any folder, you can use sh:erpa with 11ty, astro, vue/svelte/react, whatever use .md content and serve it to your browser (if needed).
+On the first run of `s`, sh:erpa creates the dot-files and store the default route as `~/.config/sherpa/routes/k1` pointing on $HOME/Documents as a placeholder.
 
-If you cloned the Calepin in your Documents folder, you could have something like this:
+Type `s route k1` to edit the content in Vim.
 
-```bash
-# ~/sherpa/bin/s  
-
-project="calepin"
-```
-Add the corresponding paths to the profile   
+It can be virtually any folder, you can use sh:erpa with 11ty, astro, vue/svelte/react, whateverJS and serve to your browser (if needed).
 
 ```bash
-# ~/.config/sherpa/projects/calepin
+# ~/.config/sherpa/routes/k1  
 
-defRoot="/home/user/Documents/calepin" 
-defDirectory="/home/user/Documents/calepin"
-defContent="/home/user/Documents/calepin/md"
+defRoot="/home/user/Documents"         # Where .git is
+defDirectory="/home/user/Documents"    # Globally the /src folder
+defContent="/home/user/Documents"      # The .md content folder 
 ```
-If your sh:erpa is plugged into a JamStack static site generator, the defDirectory would point to something like the `/src` folder.
 
 Your personal sh:erpa is ready to help you managing documents.
 
@@ -59,27 +61,25 @@ As main browser, I have Waterfox with Vim keybinds from [Vimium-FF](https://addo
 
 #### System specific defaults
 
-The script check if he is called from Windows WSL and identify anyting else as Linux but it could be MacOS version of Bash calling.
-
-`s config` or `s config nano` will open ~/sherpa/bin/s in Vim or Nano, ready to customise paths to forders or programs.
+sh:erpa check if he is called from Windows WSL and identify anyting else as Linux but it could be MacOS.
 
 - To find a program in Linux, type `which program` and you'll get something like `/usr/bin/program`. You can use that in the config.
 
-- For Windows, right click on the program's icon in the launcher > more > show in folder ...then on the shortcut r-click > settings and you'll find the path to the .exe binary. Use that in the WSL part of the config.
+- For Windows, right click on the program's icon in the launcher > more > show in folder ...then on the shortcut r-click > settings and you'll find the path to the .exe
 
 
 ## sh:erpa Modules
 
-Embracing the Unix phylosophy, sh:erpa use plain files, does one simple taks at the time ...and is extensible. Below are the first modules to play around with and compose your own workflow. As much as possible, the FreeSoftware is prefered.
+Embracing the Unix phylosophy, sh:erpa use plain text files, does one simple taks at the time ...and is extensible. Below are the first modules to play around with and compose your own experience. Obviously, the FreeSoftware is prefered, but bring in whatever you like.
 
 The quick list of available commands is in /docs/commands. Use the `?` s-command to read them in the terminal.  
 
 
-### Projects
+### Routes
 
-- Create porject profiles (sets of default paths)
-- Set the default one in the config  
-- Load project from the terminal to switch workspace  
+- Create new named route (sets of default paths)
+- Edit the content or Rename/Remove the file  
+- Take the route, set it as your active one 
 
 ### Todos
 
@@ -87,7 +87,7 @@ The quick list of available commands is in /docs/commands. Use the `?` s-command
 - Complete
 - reActivate todos 
 - Manage todo Lists
-*[Search, filter, ...with Unix tools]*
+- *[Search, filter, ...with Unix tools]*
 
 ### Bookmarks
 
@@ -95,12 +95,13 @@ The quick list of available commands is in /docs/commands. Use the `?` s-command
 - List
 - Tag 
 - Open
-*[Search, filter, ...with Unix tools]*
+- *[Search, filter, ...with Unix tools]*
 
 ### Direct Links
 
 - Open in browser anything starting with "http..."
 - Open in Browser anyting ending in .com .org ...
+- Search on DuckDuckGo from the terminal 
 
 ### Git  
 
@@ -111,18 +112,18 @@ The quick list of available commands is in /docs/commands. Use the `?` s-command
 
 ### Files 
 
-- Create files from default or custom Templates
+- Create files from Templates
 - Write text into a file without opening it (quick notes) 
 - Open file with chosen default editor or alternatives
 - Read the content of a file, inside the terminal
-- Open .md files in the Browser as .html with zero config (Calpin)
-- Preview file contents withing Ranger file explorer
+- Open .md files in the Browser as .html with no config (Calepin)
+- Preview file contents within Ranger file explorer
 - *[Search, filter, manage files ...with Unix tools]*
 
 ### Folders
 
 - Create folders with $defRoot as starting point
-- List content (from anywhere) normal, .hidden files, detailed
+- List folder content, normal, .hidden files, detailed
 - Rename folders. Works also with files, like `rename old new`
 - *[Infos and manage ...with Unix tools]*
 
@@ -147,6 +148,7 @@ By default it looks for https://newsboat.org
 ### Edit Stuff
 
 - Open bin/s with Vim or Nano to configure or tweak your sh:erpa 
+- Open .bashrc in the $defEditor
 
 ---
 

@@ -12,23 +12,16 @@ sherpaDir="/home/andrei/sherpa"
 dotDir="/home/andrei/.config/sherpa"
 defEditor="/usr/bin/vim"
 
-#                           #
-# --- Loading a Project --- #
-#                           #  
-# Must exist in $dotDir/project
+#                                 #
+# --- Taking a Route to climb --- #
+#                                 #
+
+# Must exist in $dotDir/routes 
 # It contains $defRoot $defDirectory $defContent
 
-project="vanillaNotes"
-
-#Sourcing it to load a different project=foo routes
-. $dotDir/projects/$project 
-
-# In the file, it's something like:
-#defRoot="/home/andrei/Documents/vanillaNotes"
-#defDirectory="/home/andrei/Documents/vanillaNotes"
-#defContent="/home/andrei/Documents/vanillaNotes/md"
-
-
+route="k1"
+#Sourcing the new route  
+. $dotDir/routes/$route   
 
 #                               #
 # --- sherparc & the dotDir --- #
@@ -42,8 +35,10 @@ then
 	cd ~/.config
 	mkdir sherpa 
 	cd sherpa 
-	mkdir data registers templates bin  
+	mkdir data registers templates routes  
 	touch sherparc registers/links.txt registers/grep.txt data/todo data/bookmarks data/quicklinks
+	cp $sherpaDir/k1-route-tmp routes/k1  
+	rm $sherpaDir/k1-route-tmp  
 else
 	# Source sherparc 
 	. ~/.config/sherpa/sherparc
@@ -68,9 +63,9 @@ then
 
 	# --- Linux defaults ---
 	defBrowser="firefox"
-	defEditor="vim"
-	defExplorer="ranger"
-	defExplorerBis="nautilus"
+	defEditor="/usr/bin/vim"
+	defExplorer="/usr/bin/ranger"
+	defExplorerBis="/usr/bin/nautilus"
 
 	# --- Programs qualified paths ---
 	# cmd: $ which nautilus  output: /usr/bin/nautilus
@@ -91,7 +86,7 @@ then
  
 #                               # 
 # --- If $1 is a -directory --- #
-#                               #
+#                             G  #
 
 # If the only argument is a -directory, open in defExplorer
 [[ $# == 1 && -d $1 ]] && $defExplorer $1
@@ -161,7 +156,6 @@ fi
 #                                   #
 elif [[ $(os) == "WSL" ]]
 then
-	#TODO Replace Firefox by Waterfox
 
 	# --- Windows Defaults --- # 
 	defBrowser="/mnt/c/Program Files/Mozilla Firefox/firefox.exe"
@@ -266,6 +260,37 @@ fi
 # Edit bin/s to change the Defaults
 [[ $1 == "config" ]] && vim ~/sherpa/bin/s
 [[ $1 == "config-nano" ]] && nano ~/sherpa/bin/s
+[[ $1 == "bashrc" ]] && $defEditor ~/.bashrc  
+
+# Routes config
+[[ $1 == "routes" ]] && tree ~/.config/sherpa/routes  
+[[ $1 == "route" ]] && $defEditor "$HOME/.config/sherpa/routes/$2"
+[[ $1 == "newRoute" ]] && touch "$HOME/.config/sherpa/routes/$2"
+[[ $1 == "delRoute" ]] && rm "$HOME/.config/sherpa/routes/$2"
+[[ $1 == "rnRoute" ]] && mv "$HOME/.config/sherpa/routes/$2" "$HOME/.config/sherpa/routes/$3"
+
+
+#                      #  
+# --- Change Route --- #
+#                      #
+
+if [[ $1 == "takeRoute" ]]
+then	
+	echo "We are climbing the $route route..."
+	if [[ -f "$HOME/.config/sherpa/routes/$2" ]]
+	then	 
+  	newRoute="$2"
+  	cd $sherpaDir
+  	sed -i "s/route=\"${route}\"/route=\"${newRoute}\"/" bin/s 
+  	echo "Switching to the $2 route"
+		sleep 2
+		s
+	fi  	
+fi  
+
+
+
+
 
 
 #   cd back into the root folder and get auto-completion
@@ -287,14 +312,6 @@ cd $defDirectory
 # --- Load Project --- #
 #                      #
 
-if [[ $1 == "load" ]]
-then	
-	echo "Actual project is $project"
-	echo "Switch to:"
-	read newProj
-	cd $sherpaDir
-	sed -i "s/project=\"${project}\"/project=\"${newProj}\"/" bin/s 
-fi  
 
 # This part is old, and may be re-written soon
 # Default ls listing of the main directory
@@ -513,16 +530,16 @@ fi
 
 
 # Create an empty Directory from the root
-[[ $1 == "newDir" ]] && ( mkdir $defDirectory/$2 ; ls )  
+[[ $1 == "newDir" ]] && ( mkdir $defRoot/$2 ; ls )  
 
 # Rename file or folder
 [[ $1 == "rename" ]] && ( mv $2 $3 ; ls )
 
 # Appending text to a file without opening it  
-if [[ -f $1 && -n $2 && $2 != "+" ]]
+if [[ -f $1 && $2 != "+" ]]
 then
-	echo "Writing into $defDirectory/$1"
-	echo -e "$2" >> "$defDirectory/$1"
+	echo "Writing into $1"
+	echo -e "\n$2" >> "$1"
 	echo "Done"
 fi
 
@@ -726,20 +743,18 @@ then
 	echo
 	grep -n "todo:" $dotDir/data/todo | awk -F ";" '{print $1,$3,"\nlist:",$2,"\n"}'
   echo 
-	#echo "-+-+-+-+-+-+-"
-	#echo To remove a todo from line 5 of file.md:
-	#echo sed -i '5d' file.md
-	echo
 
-	printf '\U1F4BC Git Status \n'
+	printf "\U1F4BC Git Status \n"
 
-	########################################
+	repo="$(cd $defRoot && git remote -v | grep push | awk '{print $2}' | awk -F ":" '{print $2}' | awk -F "." '{print $1}')"
+
+	
 	#
-	# Function. Check gitStatus for a string
+	# Check gitStatus for a string
 	# 
 	# Return: String 
 	#
-	#
+	
 	gitStatus()
 	{
 		local changes="$(cd $defRoot; git status | grep "Changes not staged")"
@@ -749,18 +764,18 @@ then
     if [[ -n $changes ]] 
 		then	
 			echo "Changes not staged."
-			echo "Go: s toGit \"message\""
 		elif [[ -n $clean ]]
 		then
-			echo "Nothing to commit."
-			echo "Good job!"
-		fi  
+			echo "Nothing to commit. All clean."
+		fi
 		
 	}
 	gitStatus 
+	[[ -n $repo ]] && echo "Repo: $repo"
 
 	echo
-	printf '\U2699 Project \n'
+	
+	printf '\U2699 Climbing Route \n'
 	echo "Root: $defRoot"
 	echo "Src: $defDirectory"
 	echo "Content: $defContent"

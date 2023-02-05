@@ -1,59 +1,84 @@
 # --- sh:erpa s commands --- #
 
-Just quick reminders, will be more info elsewhere.
-
 Nav:   jklm OR arrows
+
 Quit:  press q 
 
 ---
 
-### Project
-load projectName     source the paths to active project  
-
-### Todos
-       undone todos listed on s dashboard
-lT     list all todos
-cT n   complete todo line n 
-aT n   activate todo line n  
-
-### Bookmarks
-lbm  list all Bookmarks
-abm  add bookmark 
-
-### Links
-acme.com              opens in $defBrowser
-http://acme.com/foo   idem
-
-### Git
-               brief Git Status on Dashboard
-toGit "msg"    push to origin, with msg (or default if absent)  
-fromGit        pull from the repo 
-gitStatus      well, the repo's full Status
-
-### Files
-newFile               verbose prompt from template 
-nF template file      sweet'n'short
-to/file              open in $EDITOR
-to/file +            open in alt EDITOR 
-to/file "string"     write to the file
-to/file $note        write multiline msg
-c to/file            file preview (cat)
-la                   ls .hiden files  
-ll                   ls with details 
-serve                 launch the /md files as website in Browser
-
-### Folders
-newDir                create new Dir from $defSrc
-/to/dir               open Dir in $defExplorer
-/to/dir +             open Dir in alt $Explorer
-rename old new        rename Folder or File   
-
 ### Going Places
-root     navigate to $defRoot
-src      navigate to defSrc (rename defDirectory)
-content  navigate to the md folder
-dotDir   bavigate to the dot folder
-sherpa   navigate to the sherpa folder
+
+- root     $defRoot: The main root folder (git,...)
+- src      $defDirectory (will be renamed) 
+- content  The .md actual content files 
+- dotDir   The one with Routes, Templates, Registers...
+- sherpa   $HOME/sherpa with Docs, default Templates, bin
+
 
 ### Quick edits
-config         open bin/s in Vim
+
+- config    Open bin/s in Vim
+- bashrc    Open ~/.bashrc in $defEditor     
+
+
+### Routes
+
+- routes                 List available routes  
+- route x                Edit the x route  
+- takeRoute x            Source the paths to activate route 
+- newRoute               Create a new named routes  
+- rnRoute x y            Renames the x route to y
+- delRoute x             Delete the x route  
+
+
+### Todos
+
+-        Undone todos listed on s dashboard
+- lT     List all todos
+- cT n   Complete todo line n 
+- aT n   Activate todo line n  
+
+### Bookmarks
+
+- bm    List all Bookmarks
+- nbm   New bookmark 
+
+### Links
+
+- acme.com              Opens in $defBrowser
+- http://acme.com/foo   Idem
+- ddg "Cute kitten"     Search a "Cute kitten" on DuckDuckGo
+
+### Git
+-                Brief Git Status on Dashboard
+- toGit "msg"    Push to origin, with msg (or default if absent)  
+- fromGit        Pull from the repo 
+- gitStatus      Well, the repo's full Status
+
+### Files
+
+- newFile              Verbose prompt from template 
+- nF template file     Sweet'n'short
+- to/file              Open in $EDITOR (while in $defRoot)
+- to/file +            Menu with alt EDITORS 
+- to/file "string"     Write/Append text to the file
+- to/file $note        Write the content of note="lineA\nlineB"
+- c to/file            File preview (less file)  
+- la                   ls .hiden files  
+- ll                   ls with details 
+
+### Folders
+
+- newDir                Create new Dir from $defSrc
+- /to/dir               Open Dir in $defExplorer
+- /to/dir +             Open Dir in alt $Explorer
+- rename old new        Rename Folder or File   
+
+### RSS
+
+- rss    Open Newsboat (if installed)
+- af     Add a new RSS feed
+- ef     Edit feeds (opens the 'urls' file) 
+
+
+
