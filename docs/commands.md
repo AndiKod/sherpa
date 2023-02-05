@@ -33,10 +33,11 @@ Quit:  press q
 
 ### Todos
 
--        Undone todos listed on s dashboard
-- lT     List all todos
-- cT n   Complete todo line n 
-- aT n   Activate todo line n  
+- (just s)    Uncompleted todos listed on s dashboard
+- todo        Add a new one 
+- lT          List all todos
+- cT n        Complete todo line n 
+- aT n        Activate todo line n  
 
 ### Bookmarks
 
@@ -50,7 +51,8 @@ Quit:  press q
 - ddg "Cute kitten"     Search a "Cute kitten" on DuckDuckGo
 
 ### Git
--                Brief Git Status on Dashboard
+
+- (just s)       Brief Git Status on Dashboard
 - toGit "msg"    Push to origin, with msg (or default if absent)  
 - fromGit        Pull from the repo 
 - gitStatus      Well, the repo's full Status
