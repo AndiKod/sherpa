@@ -5,6 +5,26 @@
 #      -- Repo: github.com/AndiKod/sherpa --
 #          -- Author: Andrei Curelaru --
 
+#                               #
+# --- sherparc & the dotDir --- #
+#                               #
+
+# Check if the $dotDir exists & create it if not  
+if [[ ! -d ~/.config/sherpa ]]
+then
+	log=" Creating ~/.config/sherpa Load again ;)"
+	cd ~/.config
+	mkdir sherpa 
+	cd sherpa 
+	mkdir data registers templates routes  
+	touch sherparc registers/links.txt registers/grep.txt data/todo data/bookmarks data/quicklinks
+	cp $sherpaDir/k1-route-tmp routes/k1  
+	rm $sherpaDir/k1-route-tmp  
+else
+	# Source sherparc 
+	. ~/.config/sherpa/sherparc
+fi  
+
 
 # --- Basic Config --- #
 
@@ -23,26 +43,6 @@ route="k1"
 #Sourcing the new route  
 . $dotDir/routes/$route   
 
-#                               #
-# --- sherparc & the dotDir --- #
-#                               #
-
-
-# Check if the $dotDir exists & create it if not  
-if [[ ! -d ~/.config/sherpa ]]
-then
-	log=" Creating ~/.config/sherpa Load again ;)"
-	cd ~/.config
-	mkdir sherpa 
-	cd sherpa 
-	mkdir data registers templates routes  
-	touch sherparc registers/links.txt registers/grep.txt data/todo data/bookmarks data/quicklinks
-	cp $sherpaDir/k1-route-tmp routes/k1  
-	rm $sherpaDir/k1-route-tmp  
-else
-	# Source sherparc 
-	. ~/.config/sherpa/sherparc
-fi  
 
 
 # ----------------------------------------------------- #
@@ -82,11 +82,11 @@ then
 
 	# Get inside the main Directory, so we could identify $1
 	# as being a file or a directory, by implying the full path  
-	cd $defDirectory
+	cd $defRoot
  
 #                               # 
 # --- If $1 is a -directory --- #
-#                             G  #
+#                               #
 
 # If the only argument is a -directory, open in defExplorer
 [[ $# == 1 && -d $1 ]] && $defExplorer $1
@@ -607,7 +607,8 @@ fi
 # --- Commands List --- #
 #                       #
 
-[[ $1 == "?" ]] && less $sherpaDir/docs/commands.md  
+[[ $1 == "?" ]] && less $sherpaDir/docs/en/commands.md  
+[[ $1 == "?fr" ]] && less $sherpaDir/docs/fr/commands.md  
 
 #                    #
 # --- RSS Reader --- #
@@ -660,7 +661,7 @@ then
 			"Francais")
 				clear  
 				echo "Il y aura de la doc dans sherpa/docs" 
-				echo "Utilise [s ?] pour une liste des commandes "
+				echo "Utilise [s ?fr] pour une liste des commandes "
 				break 
 				;;
 			":quit")

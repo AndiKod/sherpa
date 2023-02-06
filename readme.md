@@ -8,6 +8,8 @@
 
 A tool for notes taking and daily activity, as I tried Notion and Obsidian but needed something simple, flexible and straight forward from the terminal ...so experimenting.
 
+Great with [Calepin](https://github.com/AndiKod/calepin), write plain markdown in and view it in your browser as html with zero config. 100% Vanilla, no NPM needed, no bloat, it just works. 
+
 It's a personnal project and still in early days, but feel free to give it a try. It's always good to have a sh:erpa helping you to reach your higher goals faster and safer.  
 
 ---
@@ -20,24 +22,21 @@ Clone the program in the home folder:
 cd ~
 git clone git@github.com:AndiKod/sherpa.git
 ```
-Add that folder to the path by adding that line to **/home/username/.bashrc** : 
+Add that folder to the path by adding that line to *~/.bashrc* : 
 
 ```bash
-export PATH=$PATH:/home/username/sherpa/bin
+export PATH=$PATH:$HOME/sherpa/bin
 ```
-Restart your terminal and press `s`. Welcome.
+Restart your terminal and press `s`. Welcome. Hit `s --help` for English or French infos or commands list.
 
-Edit defaults in ~/sherpa/bin/s  
+Edit defaults like your prefered text editor in ~/sherpa/bin/s  
 `s config` will open that file with Vim
 `s config-nano` the same but with Nano  
 
-Plug sh:erpa into a content directory. The recommended way is to clone [Calepin](https://github.com/AndiKod/calepin), write plain markdown in md/ and view it in your browser as html with zero config. 
-
 On the first run of `s`, sh:erpa creates the dot-files and store the default route as `~/.config/sherpa/routes/k1` pointing on $HOME/Documents as a placeholder.
 
-Type `s route k1` to edit the content in Vim.
+Type `s route k1` to edit the content and plug sh:erpa into your project.
 
-It can be virtually any folder, you can use sh:erpa with 11ty, astro, vue/svelte/react, whateverJS and serve to your browser (if needed).
 
 ```bash
 # ~/.config/sherpa/routes/k1  
@@ -47,7 +46,9 @@ defDirectory="/home/user/Documents"    # Globally the /src folder
 defContent="/home/user/Documents"      # The .md content folder 
 ```
 
-Your personal sh:erpa is ready to help you managing documents.
+It can be virtually any folder, you can use sh:erpa with 11ty, astro, vue/svelte/react, whateverJS and serve to your browser (if needed).
+
+Your personal sh:erpa is ready to help you managing documents and your daily challenges.
 
 
 ### Defaults
@@ -59,7 +60,7 @@ As main browser, I have Waterfox with Vim keybinds from [Vimium-FF](https://addo
 
 ---
 
-#### System specific defaults
+### OS specific Programs paths 
 
 sh:erpa check if he is called from Windows WSL and identify anyting else as Linux but it could be MacOS.
 
@@ -72,7 +73,7 @@ sh:erpa check if he is called from Windows WSL and identify anyting else as Linu
 
 Embracing the Unix phylosophy, sh:erpa use plain text files, does one simple taks at the time ...and is extensible. Below are the first modules to play around with and compose your own experience. Obviously, the FreeSoftware is prefered, but bring in whatever you like.
 
-The quick list of available commands is in /docs/commands. Use the `?` s-command to read them in the terminal.  
+The quick list of available commands is in $sherpaDir/docs. Use the `?` s-command to read them in the terminal.  
 
 
 ### The s Dashboard
