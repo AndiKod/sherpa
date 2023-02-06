@@ -8,7 +8,7 @@
 
 A tool for notes taking and daily activity, as I tried Notion and Obsidian but needed something simple, flexible and straight forward from the terminal ...so experimenting.
 
-Great with [Calepin](https://github.com/AndiKod/calepin), write plain markdown in and view it in your browser as html with zero config. 100% Vanilla, no NPM needed, no bloat, it just works. 
+Great with [Calepin](https://github.com/AndiKod/calepin). Write plain Markdown and view it in your browser as html with zero config. 100% Vanilla, no NPM, no bloat. Yet, can also work with Astro, 11ty, Vue/Svelte/React/WhateverJS.
 
 It's a personnal project and still in early days, but feel free to give it a try. It's always good to have a sh:erpa helping you to reach your higher goals faster and safer.  
 
@@ -45,8 +45,6 @@ defRoot="/home/user/Documents"         # Where .git is
 defDirectory="/home/user/Documents"    # Globally the /src folder
 defContent="/home/user/Documents"      # The .md content folder 
 ```
-
-It can be virtually any folder, you can use sh:erpa with 11ty, astro, vue/svelte/react, whateverJS and serve to your browser (if needed).
 
 Your personal sh:erpa is ready to help you managing documents and your daily challenges.
 
