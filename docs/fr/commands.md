@@ -1,98 +1,99 @@
-#TODO Traduire ce fichier
+# Les commandes "s " de sh:erpa 
 
+Navig:   jklm OU flèches
 
-# sh:erpa s commands
-
-Nav:   jklm OR arrows
-
-Quit:  press q 
+Quiter:  appuyer sur q 
 
 ---
 
-## Quick edits
+## Modifs Rapides
 
-- config  : Open bin/s in Vim
-- bashrc  : Open ~/.bashrc in $defEditor     
+- config       : Ouvre bin/s dans Vim
+- config-nano  : La même mais dans Nano
+- bashrc       : Ouvre ~/.bashrc avec $defEditor     
 
-## Going Places
+## se Téléporter 
 
-- root     : $defRoot: The main root folder (git,...)
-- src      : $defDirectory (will be renamed) 
-- content  : The .md actual content files 
-- dotDir   : The one with Routes, Templates, Registers...
-- sherpa   : $HOME/sherpa with Docs, default Templates, bin
+Change le répertoire actif du terminal vers:
 
-## List Things
+- root     : $defRoot: La racine du projet (.git,...)
+- src      : $defDirectory ou le dossier "src/"
+- content  : La ou l'on garde les fichiers .md  
+- dotDir   : ~/.config/sherpa avec Routes, Templates,...
+- sherpa   : ~/sherpa avec les Docs, bin, etc ...
 
-- l-root    : $defRoot folder content
-- l-md      : Content files in $defContent
-- l-sherpa  : $sherpaDir folder content
-- l-dotDir  : $dotDir folder content  
-- l-tpl     : Templates in $dotDir/templates 
-- l-docs    : Available docs in $sherpaDir/docs
-- l-data    : Content of $dotDir/data
+## Lister des choses
+
+Affiche le contenu d'un dossier, sous forme d'arborescence
+
+- l-root    : $defRoot, à la Racine du dossier principal
+- l-md      : Nos fichiers de contenu, souvent en .md  
+- l-sherpa  : Contenu du $sherpaDir (Docs, etc)
+- l-dotDir  : Contenu du $dotDir (Templates, data, etc)  
+- l-tpl     : Les Templates dans $dotDir/templates 
+- l-docs    : Fichiers documentation dans $sherpaDir/docs
+- l-data    : Les bases texte du $dotDir/data
 
 
 ## Routes
 
-- routes                 List available routes  
-- route x                Edit the x route  
-- takeRoute x            Source the paths to activate route 
-- newRoute               Create a new named routes  
-- rnRoute x y            Renames the x route to y
-- delRoute x             Delete the x route  
+- routes                 Routes disponibles  
+- route x                Editer la route x  
+- takeRoute x            Activer la route x 
+- newRoute               Créer une nouvelle route  
+- rnRoute x y            Renommer une route 
+- delRoute x             Effacer (delete) une route 
 
 
 ### Todos
 
-- (just s)    Uncompleted todos listed on s dashboard
-- todo        Add a new one 
-- lT          List all todos
-- cT n        Complete todo line n 
-- aT n        Activate todo line n  
+- (juste s)   Liste des Todo encore à faire
+- todo        Ajouter une Todo  
+- lT          Lister toutes les Todos (faites ou pas)
+- cT n        Compléter la Todo de la ligne n  
+- aT n        reActiver la Todo de la ligne n  
 
 ### Bookmarks
 
-- bm    List all Bookmarks
-- nbm   New bookmark 
+- bm    Lister tous les Bookmarks
+- nbm   Nouveau bookmark 
 
-### Links
+### Liens et Recherches
 
-- acme.com              Opens in $defBrowser
+- acme.com              Le lien s'ouvre dans $defBrowser
 - http://acme.com/foo   Idem
-- ddg "Cute kitten"     Search a "Cute kitten" on DuckDuckGo
+- ddg "Chatton mimi"    Cherche un chatton mimi, sur DuckDuckGo
 
 ### Git
 
-- (just s)       Brief Git Status on Dashboard
-- toGit "msg"    Push to origin, with msg (or default if absent)  
-- fromGit        Pull from the repo 
-- gitStatus      Well, the repo's full Status
+- (juste s)      Bref résumé de l'état du dépot
+- toGit "msg"    Sauvergarder vers Git avec un "msg"
+- fromGit        Récupérer la version la plus récente
+- gitStatus      Le détail de ce qui a été modifié, ajouté,...
 
-### Files
+### Autour des Fichiers  
 
-- newFile              Verbose prompt from template 
-- nF template file     Sweet'n'short
-- to/file              Open in $EDITOR (while in $defRoot)
-- to/file +            Menu with alt EDITORS 
-- to/file "string"     Write/Append text to the file
-- to/file $note        Write the content of note="lineA\nlineB"
-- c to/file            File preview (less file)  
-- la                   ls .hiden files  
-- ll                   ls with details 
+- newFile              Créer un fichier depuis un modèle (dynamic)
+- nF template file     Pareil mais en une seule ligne  
+- to/file              Depuis $defRoot, ouvre le fichier en édition
+- to/file +            Menu pour choisir un EDITOR alternatif 
+- to/file "string"     Ecrire dans un fichier, sans l'ouvrir
+- to/file $note        Ecrire le contenu d'une variable
+- c to/file            Apperçu d'un fichier, dans le terminal  
+- la                   Lister les fichiers cachés, .files  
+- ll                   Lister le contenu avec des détails
 
-### Folders
+### Dossiers
 
-- newDir                Create new Dir from $defSrc
-- /to/dir               Open Dir in $defExplorer
-- /to/dir +             Open Dir in alt $Explorer
-- rename old new        Rename Folder or File   
-
+- newDir                Créer un nouveau dossier (depuis root) 
+- /to/dir               Ouvre le dossier dans $defExplorer
+- /to/dir +             Ouvre le dossier dans l'$Explorer alt'
+- rename old new        Renomme un dossier ou fichier (depuis root) 
 ### RSS
 
-- rss    Open Newsboat (if installed)
-- af     Add a new RSS feed
-- ef     Edit feeds (opens the 'urls' file) 
+- rss    Ouvre Newsboat (à installer d'abord)
+- af     Ajoute un flux RSS  
+- ef     Editer le fichier des flux RSS disponibles  
 
 
 

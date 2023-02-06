@@ -608,7 +608,7 @@ fi
 #                       #
 
 [[ $1 == "?" ]] && less $sherpaDir/docs/en/commands.md  
-[[ $1 == "?fr" ]] && less $sherpaDir/docs/fr/commands.md  
+[[ $1 == "fr?" ]] && less $sherpaDir/docs/fr/commands.md  
 
 #                    #
 # --- RSS Reader --- #
