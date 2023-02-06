@@ -1,4 +1,4 @@
-# --- sh:erpa s commands --- #
+# sh:erpa s commands
 
 Nav:   jklm OR arrows
 
@@ -6,22 +6,31 @@ Quit:  press q
 
 ---
 
-### Going Places
+## Quick edits
 
-- root     $defRoot: The main root folder (git,...)
-- src      $defDirectory (will be renamed) 
-- content  The .md actual content files 
-- dotDir   The one with Routes, Templates, Registers...
-- sherpa   $HOME/sherpa with Docs, default Templates, bin
+- config  : Open bin/s in Vim
+- bashrc  : Open ~/.bashrc in $defEditor     
+
+## Going Places
+
+- root     : $defRoot: The main root folder (git,...)
+- src      : $defDirectory (will be renamed) 
+- content  : The .md actual content files 
+- dotDir   : The one with Routes, Templates, Registers...
+- sherpa   : $HOME/sherpa with Docs, default Templates, bin
+
+## List Things
+
+- l-root    : $defRoot folder content
+- l-md      : Content files in $defContent
+- l-sherpa  : $sherpaDir folder content
+- l-dotDir  : $dotDir folder content  
+- l-tpl     : Templates in $dotDir/templates 
+- l-docs    : Available docs in $sherpaDir/docs
+- l-data    : Content of $dotDir/data
 
 
-### Quick edits
-
-- config    Open bin/s in Vim
-- bashrc    Open ~/.bashrc in $defEditor     
-
-
-### Routes
+## Routes
 
 - routes                 List available routes  
 - route x                Edit the x route  

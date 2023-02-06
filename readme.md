@@ -75,6 +75,43 @@ Embracing the Unix phylosophy, sh:erpa use plain text files, does one simple tak
 The quick list of available commands is in /docs/commands. Use the `?` s-command to read them in the terminal.  
 
 
+### The s Dashboard
+
+At any moment, press just `s` and get:
+
+- An ASCII Art tile (maybe alternate ones later)
+- Date, Hour, Greeting in random languages
+- The list of your uncompleted Todos
+- Status of tour Git repo, if you have work to save
+- The author/name of the actual Git remote origin
+- Your actual "climbing" Route paths (root, src, content) 
+
+Sections of this screen could be customised in the future.
+With simple bash commands, you could create your own widgets or "s commands", as I'm looking into ways to simplify the process.
+
+### Quick Edits
+
+- Edit bin/s with Vim or Nano to configure or tweak your sh:erpa 
+- Edit .bashrc in the $defEditor
+- Edit vimrc or nvim's init (next) 
+
+### Going Places
+
+Aliases changing the actual working directory, and "Go to:"  
+
+- root: From where we use Git inside our project 
+- src: If using sh:erpa with a JamStack framework, you got it
+- content: Where all your actual .md content pages are 
+- sherpa: The sherpa folder with the Templates, the Docs, bin/s
+- dotDir: Config folder, data files, registers ...
+
+New custom aliases could be soon added via the config file.
+
+### List Things
+
+- Short commands to list in tree form the content of:
+root, content, sherpa, dotDir, templates, docs, data, registers 
+
 ### Routes
 
 - Create new named route (sets of default paths)
@@ -97,21 +134,9 @@ The quick list of available commands is in /docs/commands. Use the `?` s-command
 - Open
 - *[Search, filter, ...with Unix tools]*
 
-### Direct Links
 
-- Open in browser anything starting with "http..."
-- Open in Browser anyting ending in .com .org ...
-- Search on DuckDuckGo from the terminal 
-
-### Git  
-
-- Auto status check on the "s dashboard"
-- Full git status from anywhere
-- Push all with `toGit "msg"` oneliner
-- Pull with `fromGit` oneliner 
-
-### Files 
-
+### Files Operations
+ 
 - Create files from Templates
 - Write text into a file without opening it (quick notes) 
 - Open file with chosen default editor or alternatives
@@ -120,22 +145,26 @@ The quick list of available commands is in /docs/commands. Use the `?` s-command
 - Preview file contents within Ranger file explorer
 - *[Search, filter, manage files ...with Unix tools]*
 
+### Handle URLs & WebSearch
+
+- Open in browser anything starting with "http..."
+- Open in Browser anyting ending in .com .org ...
+- Search on DuckDuckGo from the terminal 
+
+### Basic Git Operaitions 
+
+- Auto status check on the "s dashboard"
+- Full git status from anywhere
+- Push all with `toGit "msg"` oneliner
+- Pull with `fromGit` oneliner 
+
+
 ### Folders
 
 - Create folders with $defRoot as starting point
-- List folder content, normal, .hidden files, detailed
 - Rename folders. Works also with files, like `rename old new`
 - *[Infos and manage ...with Unix tools]*
 
-### Going Places
-
-Aliases changing the actual working directory, and "go to"  
-
-- root: From where we use Git inside our project 
-- src: If using sh:erpa with a JamStack framework, you got it
-- content: Where all your actual .md content pages are 
-- sherpa: The sherpa folder with the Templates, the Docs, bin/s
-- dotDir: Config folder, data files, registers ...
 
 ### RSS Reader
 
@@ -145,10 +174,14 @@ By default it looks for https://newsboat.org
 - Add a feed from the command line
 - Launch the urls file in Vim & edit your feeds
 
-### Edit Stuff
+### Help Pages
 
-- Open bin/s with Vim or Nano to configure or tweak your sh:erpa 
-- Open .bashrc in the $defEditor
+- The traditional --help flag, with English/French menu
+
+### Version & Infos
+
+- The other  -v or --version traditional flags
+
 
 ---
 

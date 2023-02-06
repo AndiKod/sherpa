@@ -257,22 +257,41 @@ fi
 # --- Only Platform agnostic things below that line --- #
 
 
-# Edit bin/s to change the Defaults
+# --- Quick Edits --- #
+
 [[ $1 == "config" ]] && vim ~/sherpa/bin/s
 [[ $1 == "config-nano" ]] && nano ~/sherpa/bin/s
 [[ $1 == "bashrc" ]] && $defEditor ~/.bashrc  
 
-# Routes config
+# --- Going Places --- #
+
+[[ $1 == "root" ]] && (cd $defRoot; exec bash)
+[[ $1 == "src" ]] && (cd $defDirectory; exec bash)
+[[ $1 == "sherpa" ]] && (cd $sherpaDir; exec bash)
+[[ $1 == "dotDir" ]] && (cd $dotDir; exec bash)
+
+# --- List Things --- #
+
+[[ $1 == "l-root" ]] && tree $defRoot 
+[[ $1 == "l-md" ]] && tree $defContent
+[[ $1 == "l-sherpa" ]] && tree $sherpaDir
+[[ $1 == "l-dotDir" ]] && tree $dotDir
+[[ $1 == "l-tpl" ]] && tree $dotDir/templates 
+[[ $1 == "l-docs" ]] && tree $sherpaDir/docs
+[[ $1 == "l-data" ]] && tree $dotDir/data 
+[[ $1 == "l-reg" ]] && tree $dotDir/registers
+
+#                       #
+# --- Routes config --- #
+#                       # 
+
 [[ $1 == "routes" ]] && tree ~/.config/sherpa/routes  
 [[ $1 == "route" ]] && $defEditor "$HOME/.config/sherpa/routes/$2"
 [[ $1 == "newRoute" ]] && touch "$HOME/.config/sherpa/routes/$2"
 [[ $1 == "delRoute" ]] && rm "$HOME/.config/sherpa/routes/$2"
 [[ $1 == "rnRoute" ]] && mv "$HOME/.config/sherpa/routes/$2" "$HOME/.config/sherpa/routes/$3"
-
-
-#                      #  
+  
 # --- Change Route --- #
-#                      #
 
 if [[ $1 == "takeRoute" ]]
 then	
@@ -288,42 +307,24 @@ then
 	fi  	
 fi  
 
-
-
-
-
-
 #   cd back into the root folder and get auto-completion
 # + for filenames in the 's commands'.
-cd $defDirectory
+cd: $defRoot 
 
-# Move inside the root Directory
-[[ $1 == "root" ]] && (cd $defRoot; exec bash)
-# Move inside the default Directory a bit more 
-[[ $1 == "src" ]] && (cd $defDirectory; exec bash)
-# Move inside the sh:erpa Director 
-[[ $1 == "sherpa" ]] && (cd $sherpaDir; exec bash)
-# Move inside the $dotDir 
-[[ $1 == "dotDir" ]] && (cd $dotDir; exec bash)
-
-
-
-#                      #  
-# --- Load Project --- #
-#                      #
-
-
-# This part is old, and may be re-written soon
+# --- This part is old, and may be re-written soon
 # Default ls listing of the main directory
 [[ $1 == "ls" ]] && ls $defDirectory
 # Show also the hidden .files
 [[ $1 == "la" ]] && ls -a $defDirectory
 # More detailed view, with permissions and human readable sizes
 [[ $1 == "ll" ]] && ls -l -h $defDirectory
+# --- /End of the "to be re-written" section  
 
 # Print the content of a file
-[[ $1 == "c" && -f $2 ]] && less $2
-
+if [[ $1 == "c" && -f $2 ]]; then 
+	cd $defRoot
+	less $2
+fi  
 
 #               #
 # --- Todos --- #
@@ -344,23 +345,15 @@ then
 	s
 fi
 
-
-#                         #
 # --- List All Todos ---- #
-#                         #            
 
-# listTodos
 if [[ $1 == "lT" ]]
 then
 	echo -e "All Todos:\n"
 	grep -n ":" $dotDir/data/todo | awk -F ";" '{print "List: ",$2,"\n"$1,$3,"\n"}'
 fi  	
 
-
-
-#                         #
 # --- Complete a Todo --- #
-#                         #
 
 completeTodo()
 {
@@ -369,13 +362,9 @@ completeTodo()
 	sleep 2
 	s  
 }
-
 [[ $1 == "cT" ]]  && completeTodo $2
 
-
-#                         #
 # --- Activate a Todo --- #
-#                         #
 
 activateTodo()
 {
@@ -384,14 +373,9 @@ activateTodo()
 	sleep 2
 	s 
 }
-
 [[ $1 == "aT" ]] && activateTodo
 
-
-#                     #
 # --- Delete Todo --- #
-#                     #
-
 # TODO  
 
 
@@ -399,15 +383,10 @@ activateTodo()
 # --- Bookmarks --- #
 #                   # 
 
-# new bookmark  
+# --- New Bookmark --- #
+
 if [[ $1 == "nbm" ]]
 then
-
-	#if [[ $defContent ]]; then
-	#	echo "Pick a topic from that list:"
-	#	cd $defContent; ls -p | grep -v /$ | grep -v ^[A-Z]
-	#fi	
-	#read file
 	echo -e "\nSlam that url in here:"
 	read url 
 	echo "Give it a nice-short-name:"
@@ -419,11 +398,9 @@ then
 	echo "Awesome! It's in the box  ;)"
 fi 
 
-#                    #
-# --- Bookmarks ---- #
-#                    #
+# --- See all Bookmarks ---- #
 
-if [[ $1 == "lbm" ]]
+if [[ $1 == "bm" ]]
 then
 	echo -e "All Bookmarks:\n"
 	cat $dotDir/data/bookmarks | awk -F ";" '{print (NR-1 + 1)") ", $1," Tag: ",$3,"\n",$2,"\n"}'
@@ -432,42 +409,32 @@ fi
 # TODO: Filter bm by tag   
 
 
-#                                 #
-# --- Files operations ---------- #
-#                                 #
+#                          #
+# --- Files Operations --- #
+#                          #
 
-#
 # --- newFile from Template ---#
-#
 
 if [[ $1 == "newFile" ]]
 then
-	#
-	# --- Listig templates from $dotDir/templates
-	#
+	# Listig templates from $dotDir/templates
 	if [[ $dotDir ]]; then
 		echo -e "\nWhat template should I use?"
 		cd $dotDir/templates; ls -p | grep -v /$ | grep -v ^[A-Z]
 	 	echo  
 	fi	
 	read template
-	#
-	# --- Listing folders in $defRoot
-	#
+	# Listing folders in $defRoot
 	echo -e "\nOk. Where should I put the new file?"
 	cd $defRoot; ls -p | grep /$
 	read path
-	#
-	# --- Asking for a filename.ext
-	#
+	# Asking for a filename.ext
 	echo -e "\nGot it. A name.ext for it?"
 	read file  
 	cat $dotDir/templates/$template > $defRoot/$path$file
 	printf "\nThere you go! \U1F919 \n"
 	ls $defRoot/$path
-  #
-	# --- Open the new file, or not
-	#
+	# Open the new file, or not
 	echo -e "\nShould I open it already, y/n ?"
 	read open
   # First attempt
@@ -481,7 +448,6 @@ then
 		# Last chance
 		printf "\U1F937 I'm not so smart. Sry. Tell me y/n \n" 
 		read secondShoot
-
 		if [[ $secondShoot == "y" || $secondShoot == "Y" ]]
 		then
 			$defEditor $defRoot/$path$file
@@ -491,30 +457,20 @@ then
 		else	
 			printf "\U1F926 Nevermind"
 		fi  
-
-
 	fi # End [[ -d $dotDir ]] 
 fi   # End [[ $1 == nF ]]
 
-
-
-
-#                                 #
-# --- New file from template----- #
-#          The fast way!          #
-#   s nF templatefile newfile 
+# --- New file from template --- #
+#          The fast way!         #
 
 if [[ $1 == "nF" ]]
 then
-
 	template=$dotDir/templates/$2 
 	file=$defRoot/$3 
-
 	if [[ -f $template ]]
 	then	
 		touch $file  
 		cat $template > $file 
-		
 			echo -e "\nDone! Do you want to open it? [y/n]"
 			read edit
 			if [[ $edit == "y" || $edit == "Y" ]]
@@ -523,19 +479,18 @@ then
 	  fi
 	else
 		echo "The template $2 does not exists."
-		echo "s nF templateFile newFile (from \$root)"
-  fi  	
-	 
+  fi  	 
 fi
 
 
-# Create an empty Directory from the root
+# --- Create an empty Directory from $defRoot --- #
+
 [[ $1 == "newDir" ]] && ( mkdir $defRoot/$2 ; ls )  
 
-# Rename file or folder
+# --- Rename file or folder --- #
 [[ $1 == "rename" ]] && ( mv $2 $3 ; ls )
 
-# Appending text to a file without opening it  
+# --- Appending text to a file from $defRoot --- #
 if [[ -f $1 && $2 != "+" ]]
 then
 	echo "Writing into $1"
@@ -543,16 +498,15 @@ then
 	echo "Done"
 fi
 
+#                             #
+# --- Handle URL & Search --- #
+#                             #
 
-#                         #
-# --- If $1 is a Link --- #
-#                         #
-
-# Open a direct link  
+# --- Open a direct link --- # 
 [[ $1 =~ ^http*.*$ || $1 =~ (.com|.net|.org|.io)$  ]] &&
 "$defBrowser" $1 2>/dev/null
 
-# DuckDuckGo Search
+# --- DuckDuckGo Search --- #
 [[ -n $1 && $1 == "ddg" ]] && 
 "$defBrowser" "https://duckduckgo.com/?q=$2" 2>/dev/null  	
 
@@ -564,15 +518,14 @@ fi
 #
 if [[ $1 == "loc" || $1 == "grep" ]]
 then
-	# Move inside the main folder for relative paths 
-	cd $defDirectory 
-	# Locate lines containing $2 in $3 ant write it to the register   
-	(grep "$2" $3 > "$dotDir/registers/grep.txt" ;
+	cd $defRoot 
+	# Locate lines containing $2 in $3, write it to the register   
+	(grep "$2" $3 > "$dotDir/registers/grep" ;
 	# Read the register and output the content
-   echo $(cat "$dotDir/registers/grep.txt"))
+   echo $(cat "$dotDir/registers/grep"))
 fi  
  
-# Frankly, better learn and use it directly, it's easy à pipable
+# Frankly, better learn and use it directly, it's easy & pipable
 
 #                               #
 # --- Basic Git operations ---- #
@@ -653,21 +606,23 @@ fi
 #                       #
 # --- Commands List --- #
 #                       #
+
 [[ $1 == "?" ]] && less $sherpaDir/docs/commands.md  
 
 #                    #
 # --- RSS Reader --- #
 #                    #
-
 # Install https://newsboat.org
 
-# Launch the Reader 
+# --- Launch the Reader --- #
+
 if [[ $1 == "rss" ]]
 then
 	[[ $(newsboat -v | grep newsboat) != "" ]] && newsboat
 fi	
 
-# Add a Feed 
+# --- Add a Feed --- #
+
 if [[ $1 == "af" ]]
 then
 	echo -e "\nOk, paste me that feed url below:"
@@ -675,28 +630,20 @@ then
 	[[ -f ~/.newsboat/urls ]] && echo $feed >> ~/.newsboat/urls  
 	[[ ! -f ~/.newsboat/urls ]] && echo "The file is not here"   
 	echo "Got it! Happy reading, or fix it and comme back."
-	echo "Check the [ef] command to see if it's there."
 fi	
 
-# Edit Feeds file  
+# --- Edit Feeds file --- #
+
 if [[ $1 == "ef" ]]
 then
-	[[ -f ~/.newsboat/urls ]] && vim ~/.newsboat/urls  
+	[[ -f ~/.newsboat/urls ]] && $defEditor ~/.newsboat/urls  
 fi	
-
-
-
-
 
 #                    #
 # ---- HELP Page --- #
 #                    #
 
 lang=("English" "Francais" ":quit")
-
-# If no arguments, print the Help page  
-[[ $1 == "--version" || $1 == "-v" ]] && 
-echo "AndiKod sh:erpa v1.0 - Github"
 
 # If no arguments, print the Help page  
 if [[ $1 == "--help" ]]
@@ -724,34 +671,44 @@ then
 	done
 fi 
 
-# Start Page
+
+# --- Version --- #
+
+[[ $1 == "--version" || $1 == "-v" ]] && 
+echo "AndiKod sh:erpa v1.0 - Github"
+
+
+#                    #
+# --- Start Page --- #
+#                    #
+
 if [[ $# == 0 ]]
 then
-	clear  
+	clear
+	# --- Header ASCII Art --- #
 	echo       
 	echo "+-+-+-+-+-+-+"
 	echo "|s|h|e|r|p|a|"
 	echo "+-+-+-+-+-+-+"
 	echo 
-
+  # Greetings & Hello
 	greeting=("Hey" "Holà" "Bonjour" "Howdy" "Buna" "Ciao" "Hyva paiva" "Halo")
 	index=$(( RANDOM % ${#greeting[@]} ))
-
 	printf "Today $(date +%b%d) - $(date +%k:%M) \n"
 	printf '\U1F44B '"${greeting[${index}]} $(whoami) \n"  
 
 	echo
+	
+	# --- Uncompleted Todos --- #
 	grep -n "todo:" $dotDir/data/todo | awk -F ";" '{print $1,$3,"\nlist:",$2,"\n"}'
-  echo 
-
+  
+	echo 
+  # --- Git Status short --- #
 	printf "\U1F4BC Git Status \n"
-
 	repo="$(cd $defRoot && git remote -v | grep push | awk '{print $2}' | awk -F ":" '{print $2}' | awk -F "." '{print $1}')"
-
 	
 	#
 	# Check gitStatus for a string
-	# 
 	# Return: String 
 	#
 	
@@ -775,6 +732,8 @@ then
 
 	echo
 	
+  # --- Show Actual Route --- #
+
 	printf '\U2699 Climbing Route \n'
 	echo "Root: $defRoot"
 	echo "Src: $defDirectory"
