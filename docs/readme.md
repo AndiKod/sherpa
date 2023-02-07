@@ -1,6 +1,6 @@
 # sh:erpa Docs & more
 
-This section could grow into how-to and ressources pages, about practical and simple aspects like basic shell commands, adding rss key to Github, Unix friends like grep/awk/sed, writing to/from files ... 
+This section will grow into how-to and ressources pages, about practical and simple aspects like basic shell commands, adding rss key to Github, linl a local folder to a git remote, Unix friends like grep/awk/sed, writing to/from files ... 
 
 For each topic, just quick practical examples plus ...man pages, articles, videos, or other ressources to dive deeper, all straight into the terminal or one click away.
 

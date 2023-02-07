@@ -46,8 +46,7 @@ defDirectory="/home/user/Documents"    # Globally the /src folder
 defContent="/home/user/Documents"      # The .md content folder 
 ```
 
-Your personal sh:erpa is ready to help you managing documents and your daily challenges.
-
+> Find all available 's commands' and some more usefull HOW-TO pages, in the [Docs](https://github.com/AndiKod/sherpa/tree/master/docs) Both english, or ...en fraçais svp.
 
 ### Defaults
 
