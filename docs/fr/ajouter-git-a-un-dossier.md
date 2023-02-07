@@ -28,7 +28,7 @@ git remote -v
 ```
 - Première sauvegarde   
 
-On ajoute tout (avec add .), on crée 'un colis' en y collan un message qui sera affiché avec, et on envoy (push) en ajoutant la mention --set-upstream sinon il va le demander.
+On ajoute tout (avec add .), on crée 'un colis' en y collant un message qui sera affiché avec, et on (push) en ajoutant la mention --set-upstream sinon il va le demander.
 
 ```bash
 git add . 

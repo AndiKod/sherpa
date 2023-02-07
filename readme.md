@@ -46,7 +46,8 @@ defDirectory="/home/user/Documents"    # Globally the /src folder
 defContent="/home/user/Documents"      # The .md content folder 
 ```
 
-> Find all available 's commands' and some more usefull HOW-TO pages, in the [Docs](https://github.com/AndiKod/sherpa/tree/master/docs) Both english, or ...en fraçais svp.
+
+> Find all available 's commands' and some usefull HOWTO pages, in the [Docs](https://github.com/AndiKod/sherpa/tree/master/docs) Both english, or ...en fraçais svp.
 
 ### Defaults
 
