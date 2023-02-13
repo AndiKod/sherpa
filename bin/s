@@ -169,9 +169,10 @@ then
 	Nano="/bin/nano"
 	ed="/bin/ed"
 	neoVim="/usr/bin/nvim"
+	PanWriter="/mnt/c/Program Files/PanWriter/PanWriter.exe"
 
 	# Alternative programs [+] Options
-	editPlus=("Nano" "neoVim" "ed")
+	editPlus=("PanWriter" "Nano" "neoVim" "ed")
 	dirPlus=("WinExplorer")
 
 	# Get inside the main Directory, so we could identify $1
@@ -231,6 +232,10 @@ then
 		"Nano") 
 			editIn $Nano $1
 			exit
+		;;
+	"PanWriter")
+		  "$PanWriter" $1 2> /dev/null 
+			exit  
 		;;
 		"neoVim") 
 			editIn $neoVim $1 
@@ -309,7 +314,7 @@ fi
 
 #   cd back into the root folder and get auto-completion
 # + for filenames in the 's commands'.
-cd: $defRoot 
+#cd: $defRoot 
 
 # --- This part is old, and may be re-written soon
 # Default ls listing of the main directory
@@ -332,16 +337,31 @@ fi
 
 if [[ $1 == "todo" ]]
 then
-	todoTags=(`cat "$defRoot/data/todo-tags"`)
+	todoLists=(`cat "$dotDir/data/todo-lists"`)
 	echo -e "\nOn wich list?"
-	for tag in "${todoTags[@]}"
+	for list in "${todoLists[@]}"
 	do	
-		echo "- $tag"
+		echo "- $list"
   done 
-	read list  
-	echo "So, what do you plan todo:"
+	read list
+ 
+  # Check if the list exists
+  if [[ $(grep -c $list $dotDir/data/todo-lists) == "0" ]]
+	then
+		echo "The $list list is not there. Do I create it? y/n"
+		read create 
+		if [[ $create == "y" ]]
+		then	
+			echo $list >> $dotDir/data/todo-lists
+		else
+			$list="unlisted"
+		fi	
+	fi  	
+
+	echo "So, what do you plan... todo:"
 	read todo
 	echo "todo:;$list;$todo" >> $dotDir/data/todo 
+	
 	s
 fi
 
@@ -531,6 +551,54 @@ fi
 # --- Basic Git operations ---- #
 #                               #
 
+
+
+# --- Sync. Push or Pull --- #
+
+if [[ $1 == sync ]]
+then
+	
+	gitMessage=$2
+
+	#--- Check the Status --- #
+	if [[ $(git status | grep "nothing to commit") != "" ]]
+	then
+		echo "Getting updates from Git"
+		git pull
+		echo "Done!"
+	else
+		# --- Push to Git --- #
+
+		# Print a warning if Git not installed
+		[[ "$(git --version | awk '{print $2}')" != "version" ]] && echo "You need to install Git first. See `s --help`"
+
+		cd $defRoot
+
+		if [[ "$(git remote)" != "origin" ]]
+		then 
+			# If the defDirectory is not linked to the remote  
+			echo -e "\nThere is no git remote called origin \nin $(pwd)"
+			exit 1
+		else
+			# Get the $2 message or set a default.
+			if [[ -n $2 ]]; then
+				gitMessage="$2"
+			else
+				gitMessage="From sh:erpa"
+			fi	
+			# If Git and origin remote are both here, go Push.
+			echo "Saving to Git."
+			git add -A; git commit -m "$gitMessage"; git push &>/dev/null 
+			# Add an entry to a log 
+			echo "Done!"
+		fi  
+	fi
+
+fi  
+
+
+
+
 # --- Git PUSH to the git remote  --- #
 
 if [[ $1 == "toGit" ]]
@@ -644,28 +712,26 @@ fi
 # ---- HELP Page --- #
 #                    #
 
-lang=("English" "Francais" ":quit")
+lang=("English" "Francais")
 
 # If no arguments, print the Help page  
-if [[ $1 == "--help" ]]
+if [[ $1 == "--help" || $1 == "-h" ]]
 then 
 	echo "Sherpa Help Pages"
 	select help in "${lang[@]}"
 	do
 		case $help in
 			"English")
-				echo "Docs will be in sherpa/docs & Github" 
-				echo "Type [s ?] for commands list." 
+				echo -e "\nType s ? for commands list."
+				echo "Actual HOWTO's in \$sherpaDir/docs/en:"
+				tree $sherpaDir/docs/en
 				break
 				;;
 			"Francais")
-				clear  
-				echo "Il y aura de la doc dans sherpa/docs" 
-				echo "Utilise [s ?fr] pour une liste des commandes "
+				echo -e "\nUtilise s ?fr pour la liste des commandes "
+				echo "Fiches COMMENT dans \$sherpaDir/docs/fr:"
+				tree $sherpaDir/docs/fr  
 				break 
-				;;
-			":quit")
-				clear ;  exit
 				;;
 			*) echo "Invalid $REPLY option"; break
 		esac		

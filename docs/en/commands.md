@@ -62,9 +62,10 @@ Quit:  press q
 ### Git
 
 - (just s)       Brief Git Status on Dashboard
+- gitStatus      Well, the repo's full Status
+- sync           Either push (if needed) or pull (just in case) 
 - toGit "msg"    Push to origin, with msg (or default if absent)  
 - fromGit        Pull from the repo 
-- gitStatus      Well, the repo's full Status
 
 ### Files
 

@@ -67,9 +67,10 @@ Affiche le contenu d'un dossier, sous forme d'arborescence
 ### Git
 
 - (juste s)      Bref résumé de l'état du dépot
+- gitStatus      Le détail de ce qui a été modifié, ajouté,...
+- sync           Sauvegarde (push) si besoin, sinon (pull)
 - toGit "msg"    Sauvergarder vers Git avec un "msg"
 - fromGit        Récupérer la version la plus récente
-- gitStatus      Le détail de ce qui a été modifié, ajouté,...
 
 ### Autour des Fichiers  
 

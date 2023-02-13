@@ -1,0 +1,35 @@
+#! /bin/bash
+#
+# --- Utility for Calepin ---- #
+# It generate a static website #
+#+from the .md and layouts.    #
+# At it core, stands Pandoc.   #
+
+root="/home/andrei/code/calepin"
+
+tplHome=$root/src/layouts/Home.html
+tplPage=$root/src/layouts/Page.html
+content=$root/src/pages
+data=$root/src/data
+dist=$root/dist  
+
+for file in $content/*
+do
+	md=${file##*/}; filename=${md%.*}
+
+	if [[ $filename == "index" ]]
+	then	
+		echo "Compiling the Homepage"
+		pandoc --from markdown+emoji --to html -s --metadata-file $data/meta.json --template $tplHome $file -o $dist/$filename.html  
+	else
+		echo "Compiling $filename"
+		if [[ -d $dist/$filename ]]
+		then	
+		pandoc --from markdown+emoji --to html -s --template $tplPage $file -o $dist/$filename/index.html
+  	else
+			mkdir $dist/$filename
+	  	pandoc --from markdown+emoji --to html -s --template $tplPage $file -o $dist/$filename/index.html
+		fi	
+	fi  
+
+done	
